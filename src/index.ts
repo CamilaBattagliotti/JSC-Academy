@@ -4,7 +4,7 @@ import swaggerDocument from "./swagger/api.json";
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-const PORT = 3001;
+const PORT = 3000;
 
 const startServer = async () => {
   try {
