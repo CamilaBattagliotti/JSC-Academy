@@ -1,7 +1,10 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-const sequelize = new Sequelize(); //url de nuestra db
-//const sequelize = new Sequelize("process.env.DB_URI");
+const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, PORT } = process.env;
+
+const sequelize = new Sequelize(
+  `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${PORT || 5432}/${DB_NAME}`
+);
 
 async function authenticate() {
   try {
