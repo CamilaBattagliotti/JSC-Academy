@@ -27,7 +27,11 @@
         },
         {
             "name": "class",
-            "description": "Products CRUD"
+            "description": "Class CRUD"
+        },
+        {
+            "name": "auth",
+            "description": "Auth operations"
         }
     ],
     "paths": {
@@ -54,15 +58,8 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "api_key": []
-                    }
-                ]
-            }
-        },
-        "/users/create": {
+                }
+            },
             "post": {
                 "tags": [
                     "user"
@@ -109,7 +106,7 @@
                 }
             }
         },
-        "/users/delete/{userId}": {
+        "/users/{userId}": {
             "get": {
                 "tags": [
                     "product"
