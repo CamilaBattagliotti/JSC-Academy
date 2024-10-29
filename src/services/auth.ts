@@ -1,7 +1,7 @@
 import Auth from "../models/auth";
 import { createSaltAndHash, UUID } from "../utils/createHash";
 import { createToken } from "../utils/token";
-import UsersService from "./users-service";
+import UsersService from "./users";
 import { validateSignup } from "../schemas/auth";
 
 class AuthService {

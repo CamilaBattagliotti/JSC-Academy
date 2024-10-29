@@ -1,6 +1,6 @@
 //controller recibe res req y responde al front.
 import { Request, Response, NextFunction } from "express";
-import UserService from "../services/users-service";
+import UserService from "../services/users";
 class UserController {
   static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
@@ -12,8 +12,6 @@ class UserController {
   }
   static async create(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log("soy el controlador", req.body);
-
       const user = await UserService.create(req.body);
 
       res.status(201).json({ message: "User created", data: user });

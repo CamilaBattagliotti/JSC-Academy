@@ -18,12 +18,11 @@ const Auth = sequelize.define("Auth", {
   },
 
   userId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     allowNull: false,
     validate: {
       notEmpty: { msg: "El id de ususario es requerido" },
     },
   },
 });
-
 export default Auth;

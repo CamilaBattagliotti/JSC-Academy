@@ -3,10 +3,9 @@ import { DataTypes, Model } from "../database/db";
 
 const User = sequelize.define("User", {
   id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
-    allowNull: false,
   },
   username: {
     type: DataTypes.STRING,
@@ -16,6 +15,7 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+
   email: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -29,5 +29,4 @@ const User = sequelize.define("User", {
     allowNull: false,
   },
 });
-
 export default User;

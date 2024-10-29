@@ -1,5 +1,5 @@
 //service logica de negocios..
-import User from "../models/users-model";
+import User from "../models/users";
 
 class UserService {
   static async getAll() {
@@ -12,10 +12,7 @@ class UserService {
   }
   static async create(data) {
     try {
-      console.log("soy el servicio", data);
-
       const { username, fullname, email, birthdate, nationality } = data;
-      console.log("antes de entrar a create de sequelize: ");
 
       const user = await User.create({
         username,
@@ -24,7 +21,6 @@ class UserService {
         birthdate,
         nationality,
       });
-      console.log("soy user", user);
 
       return user;
     } catch (error) {
