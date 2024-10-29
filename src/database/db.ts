@@ -1,12 +1,13 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 import dotenv from "dotenv";
+
 dotenv.config();
 
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, PORT } = process.env;
 
 // Local.
 const sequelize = new Sequelize(
-  `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${PORT || 5432}/${DB_NAME}`
+  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${PORT || 5432}/${DB_NAME}`
 );
 
 // Deploy(desde postman). URL publica de nuestra db.

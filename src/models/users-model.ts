@@ -3,9 +3,10 @@ import { DataTypes, Model } from "../database/db";
 
 const User = sequelize.define("User", {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
     primaryKey: true,
+    allowNull: false,
   },
   username: {
     type: DataTypes.STRING,
@@ -13,10 +14,6 @@ const User = sequelize.define("User", {
   },
   fullname: {
     type: DataTypes.STRING,
-    allowNull: false,
-  },
-  password: {
-    type: DataTypes.STRING, //8 caracteres, numeros, mayusculas,minusculas y caracteres especiales----> zod?(regex..(?))
     allowNull: false,
   },
   email: {
@@ -32,6 +29,5 @@ const User = sequelize.define("User", {
     allowNull: false,
   },
 });
-User.sync(); // check
 
 export default User;
