@@ -1,6 +1,7 @@
 import express from "express";
 import morgan from "morgan";
 import indexRouter from "./routes";
+import errorHandler from "./middlewares/errorHandler";
 
 const app = express();
 
@@ -12,5 +13,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/", indexRouter); //???
+
+app.use(errorHandler);
 
 export default app;

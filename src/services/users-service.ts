@@ -12,24 +12,20 @@ class UserService {
   }
   static async create(data) {
     try {
-      const {
-        id,
+      console.log("soy el servicio", data);
+
+      const { username, fullname, email, birthdate, nationality } = data;
+      console.log("antes de entrar a create de sequelize: ");
+
+      const user = await User.create({
         username,
         fullname,
         email,
-        password,
         birthdate,
         nationality,
-      } = data;
-      const user = await User.create({
-        data: {
-          username,
-          fullname,
-          email,
-          birthdate,
-          nationality,
-        },
       });
+      console.log("soy user", user);
+
       return user;
     } catch (error) {
       throw error;
