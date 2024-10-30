@@ -37,8 +37,13 @@ class UserService {
   }
   static async delete(id) {
     try {
-      const user = await User.destroy(id);
-      return user;
+      const user = await User.findByPk(id);
+      if (!user) {
+        throw new Error("Usuario no encontrado");
+      }
+      
+      await user.destroy(); // Con la relación configurada, esto eliminará también el registro en 'Auth'
+      return { message: "Usuario y autenticación eliminados correctamente" };
     } catch (error) {
       throw error;
     }
