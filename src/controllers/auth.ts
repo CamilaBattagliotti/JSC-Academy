@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Auth from "../services/auth";
+import AuthService from "../services/auth";
 
 class AuthController {
   static async register(req: Request, res: Response, next: NextFunction) {
@@ -9,6 +10,15 @@ class AuthController {
       res.status(200).json({ data: auth });
     } catch (error) {
       next(error);
+    }
+  }
+
+  static async getAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const users = await AuthService.getAll();
+      res.status(200).json({ data: users });
+    } catch (error) {
+      next(error); //hacer erroshandler
     }
   }
 
