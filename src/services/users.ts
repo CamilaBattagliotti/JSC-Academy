@@ -35,9 +35,9 @@ class UserService {
       throw error;
     }
   }
-  static async delete(id) {
+  static async delete(userId: string) {
     try {
-      const user = await User.destroy(id);
+      const user = await User.destroy({ where: { id: userId } });
       return user;
     } catch (error) {
       throw error;

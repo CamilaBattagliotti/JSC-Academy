@@ -109,6 +109,14 @@ class AuthService {
   //       throw error;
   //     }
   // }}
+  static async getAll() {
+    try {
+      const users = await Auth.findAll();
+      return users;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default AuthService;
