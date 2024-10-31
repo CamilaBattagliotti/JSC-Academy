@@ -3,6 +3,7 @@ import { createSaltAndHash, UUID } from "../utils/createHash";
 import { createToken } from "../utils/token";
 import UsersService from "./users";
 import { validateSignup } from "../schemas/auth";
+import Classe from "../models/classes";
 
 class AuthService {
   static async register(data: any) {
@@ -68,6 +69,15 @@ class AuthService {
       };
     } catch (error: any) {
       throw new Error(error.message || "Error al registrar el usuario");
+    }
+  }
+
+  static async getAll() {
+    try {
+      const users = await Classe.findAll();
+      return users;
+    } catch (error) {
+      throw error;
     }
   }
 

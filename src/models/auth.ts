@@ -9,7 +9,6 @@ const Auth = sequelize.define("Auth", {
   },
 
   password: {
-    //password: string (8 caracteres como minimo, debe incluir numeros, letras en mayusculas y minusculas, y caracteres espaciales)
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
@@ -25,4 +24,5 @@ const Auth = sequelize.define("Auth", {
     },
   },
 });
+
 export default Auth;

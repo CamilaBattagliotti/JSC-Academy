@@ -23,23 +23,23 @@ async function authenticate() {
     console.error("Unable to connect to the database:", error);
   }
 }
-//FUNCION PARA CHEQUEAR SI LA TABLA EXISTE
-// async function checkIfTableExists() {
-//   const queryInterface = sequelize.getQueryInterface();
-//   const tables = await queryInterface.showAllTables();
+// FUNCION PARA CHEQUEAR SI LA TABLA EXISTE
+async function checkIfTableExists() {
+  const queryInterface = sequelize.getQueryInterface();
+  const tables = await queryInterface.showAllTables();
 
-//   if (tables.includes("Users")) {
-//     console.log('La tabla "Users" existe.');
-//   } else {
-//     console.log('La tabla "Users" no existe.');
-//   }
-// }
+  if (tables.includes("Auths")) {
+    console.log('La tabla "Auths" existe.', tables);
+  } else {
+    console.log('La tabla "Auths" no existe.');
+  }
+}
 
 // Autenticación y verificación de la tabla
-// (async () => {
-//   sequelize.sync();
-//   await authenticate();
-//   await checkIfTableExists();
-// })();
+(async () => {
+  sequelize.sync();
+  await authenticate();
+  await checkIfTableExists();
+})();
 export default sequelize;
 export { DataTypes, Model };
