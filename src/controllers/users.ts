@@ -21,7 +21,7 @@ class UserController {
   }
   static async getById(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await UserService.getOne(req.params.id); //va a ser uuid?
+      const user = await UserService.getById(req.params.id); //va a ser uuid?
       res.status(200).json({ data: user });
     } catch (error) {
       next(error); //hacer erroshandler
@@ -38,9 +38,18 @@ class UserController {
   static async update(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await UserService.update(req.params.id, req.body);
-      res.status(201).json({ message: "User updated", data: user });
+      res.status(201).json({ message: "User updated", data: user }); //manda user updated aunque no lo haga x id incorrecto jajaj
     } catch (error) {
-      next(error); //hacer erroshandler
+      next(error);
+    }
+  }
+  static async getByEmail(req: Request, res: Response, next: NextFunction) {
+    //no se si esto va xq lo usa el auth
+    try {
+      const user = await UserService.getByEmail(req.body.email); //???
+      res.status(201).json({ data: user });
+    } catch (error) {
+      next(error);
     }
   }
 }

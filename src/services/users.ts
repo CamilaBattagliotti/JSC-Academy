@@ -27,31 +27,56 @@ class UserService {
       throw error;
     }
   }
-  static async getOne(id) {
+  static async getById(id) {
+    //ok
     try {
-      const user = await User.findOne(id);
+      const user = await User.findByPk(id);
+      if (!user) {
+        const error = new Error("Usuario no encontrado");
+        error["statusCode"] = 404;
+        throw error;
+      }
       return user;
     } catch (error) {
       throw error;
     }
   }
-  static async delete(id) {
+  static async delete(userId: string) {
     try {
-      const user = await User.findByPk(id);
-      if (!user) {
-        throw new Error("Usuario no encontrado");
-      }
-      
-      await user.destroy(); // Con la relación configurada, esto eliminará también el registro en 'Auth'
-      return { message: "Usuario y autenticación eliminados correctamente" };
+      const user = await User.destroy({ where: { id: userId } });
+      return user;
     } catch (error) {
       throw error;
     }
   }
   static async update(id, data) {
     try {
-      const user = await User.update(id, data);
-      return user;
+      const [filasActualizadas] = await User.update(data, {
+        where: { id: id },
+      });
+
+      if (filasActualizadas == 0) {
+        const error = new Error("Error al actualizar el usuario");
+        error["statusCode"] = 404;
+        throw error;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async getByEmail(email) {
+    try {
+      const user = await User.findOne({ where: { email: email } }); //???
+      console.log(user);
+
+      // if (!user) {
+      //   const error = new Error("Usuario no encontrado");
+      //   error["statusCode"] = 404;
+
+      //   throw error;
+      // }
+      //return user;
     } catch (error) {
       throw error;
     }

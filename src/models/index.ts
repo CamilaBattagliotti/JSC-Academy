@@ -23,6 +23,6 @@ Classe.belongsToMany(User, {
   foreignKey: "classeId",
 });
 
-sequelize.sync();
+sequelize.sync({ force: true });
 
 export { User, Auth, Classe };

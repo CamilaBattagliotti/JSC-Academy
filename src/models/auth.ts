@@ -1,4 +1,5 @@
 import sequelize, { DataTypes } from "../database/db";
+import User from "./users";
 
 const Auth = sequelize.define("Auth", {
   id: {
@@ -19,10 +20,11 @@ const Auth = sequelize.define("Auth", {
   userId: {
     type: DataTypes.UUID,
     allowNull: false,
+    references: { model: User, key: "id" },
+    onDelete: "CASCADE",
     validate: {
       notEmpty: { msg: "El id de ususario es requerido" },
     },
   },
 });
-
 export default Auth;

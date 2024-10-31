@@ -9,5 +9,4 @@ authRouter.post("/register", Auth.register);
 authRouter.post("/logout", Auth.logout);
 authRouter.get("/", Auth.getAll);
 
-
 export default authRouter;
