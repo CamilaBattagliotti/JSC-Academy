@@ -74,7 +74,7 @@ class AuthService {
 
   static async getAll() {
     try {
-      const users = await Classe.findAll();
+      const users = await Auth.findAll();
       return users;
     } catch (error) {
       throw error;
