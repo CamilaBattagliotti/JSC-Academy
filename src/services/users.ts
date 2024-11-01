@@ -68,15 +68,7 @@ class UserService {
   static async getByEmail(email) {
     try {
       const user = await User.findOne({ where: { email: email } }); //???
-      console.log(user);
-
-      // if (!user) {
-      //   const error = new Error("Usuario no encontrado");
-      //   error["statusCode"] = 404;
-
-      //   throw error;
-      // }
-      //return user;
+      return user;
     } catch (error) {
       throw error;
     }
