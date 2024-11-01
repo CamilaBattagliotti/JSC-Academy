@@ -47,7 +47,7 @@ class UserController {
     //no se si esto va xq lo usa el auth
     try {
       const user = await UserService.getByEmail(req.body.email); //???
-      res.status(201).json({ data: user });
+      res.status(200).json({ data: user });
     } catch (error) {
       next(error);
     }

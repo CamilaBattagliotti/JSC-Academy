@@ -29,10 +29,11 @@ class AuthService {
 
       // 1. Verificar si el email ya existe en la tabla de usuarios
 
-      // const existingUser = await UsersService.getByEmail(email);
-      // if (existingUser) {
-      //   throw new Error("El usuario ya está registrado");
-      // }
+      const existingUser = await UsersService.getByEmail(email);
+
+      if (existingUser) {
+        throw new Error("El usuario ya está registrado");
+      }
 
       // 2. Crear el usuario en la tabla de `User`
       const newUser: any = await UsersService.create({
@@ -81,44 +82,44 @@ class AuthService {
     }
   }
 
-  //   static async login(data: any) {
-  //     try {
-  //       const { email, password } = data;
+  static async login(data: any) {
+    try {
+      const { email, password } = data;
 
-  //       // Buscar usuario por su email
-  //       //const user: any = await UsersService.getByEmail(email);
+      // Buscar usuario por su email
+      const user: any = await UsersService.getByEmail(email);
 
-  //       // if (!user) {
-  //       //   throw new Error("Usuario no encontrado");
-  //       // }
+      if (!user) {
+        throw new Error("Usuario no encontrado");
+      }
 
-  //       // Buscar las credenciales del usuario en la tabla 'Auth'
-  //       const userAuth: any = await Auth.findOne({ where: { userId: user.id } });
-  //       //console.log("el userid es:", user.id);
+      // Buscar las credenciales del usuario en la tabla 'Auth'
+      const userAuth: any = await Auth.findOne({ where: { userId: user.id } });
+      //console.log("el userid es:", user.id);
 
-  //       if (!userAuth) {
-  //         throw new Error("No se encontraron credenciales asociadas al usuario");
-  //       }
+      if (!userAuth) {
+        throw new Error("No se encontraron credenciales asociadas al usuario");
+      }
 
-  //       // Descomponer la contraseña almacenada (salt:hash)
-  //       const [salt, storedHash] = userAuth.password.split(":");
+      // Descomponer la contraseña almacenada (salt:hash)
+      const [salt, storedHash] = userAuth.password.split(":");
 
-  //       // Hashear la contraseña ingresada con el mismo salt
-  //       const hashedPassword = createSaltAndHash(password, salt);
+      // Hashear la contraseña ingresada con el mismo salt
+      const hashedPassword = createSaltAndHash(password, salt);
 
-  //       // Comparar el hash almacenado con el hash generado
-  //       if (hashedPassword === userAuth.password) {
-  //         // Si coinciden, generar un nuevo token
-  //         const token = createToken({ id: user.id, role: user.registrationType });
+      // Comparar el hash almacenado con el hash generado
+      if (hashedPassword === userAuth.password) {
+        // Si coinciden, generar un nuevo token
+        const token = createToken({ id: user.id, role: user.registrationType });
 
-  //         return { message: "Login exitoso", token };
-  //       } else {
-  //         throw new Error("Contraseña incorrecta");
-  //       }
-  //     } catch (error) {
-  //       throw error;
-  //     }
-  // }}
+        return { message: "Login exitoso", token };
+      } else {
+        throw new Error("Contraseña incorrecta");
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default AuthService;
