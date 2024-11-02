@@ -24,9 +24,9 @@ class ClassesService {
       throw error;
     }
   }
-  static async getOne(id) {
+  static async getById(id) {
     try {
-      const classe = await Classe.findOne(id);
+      const classe = await Classe.findByPk(id);
       return classe;
     } catch (error) {
       throw error;
@@ -47,7 +47,9 @@ class ClassesService {
   }
   static async update(id, data) {
     try {
-      const classe = await Classe.update(id, data);
+      const classe = await Classe.update(data, {
+        where: { id: id },
+      });
       return classe;
     } catch (error) {
       throw error;
