@@ -1,3 +1,4 @@
+import { UserClasse } from "../models";
 import Classe from "../models/classes";
 
 class ClassesService {
@@ -51,6 +52,22 @@ class ClassesService {
         where: { id: id },
       });
       return classe;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async enroll(classId, userId) {
+    console.log("entre al servicio", classId, userId);
+    const date = new Date();
+    try {
+      const signUp = await UserClasse.create({
+        classId,
+        userId,
+        enrollmentDate: date,
+        status: "Active",
+      });
+      return signUp;
     } catch (error) {
       throw error;
     }

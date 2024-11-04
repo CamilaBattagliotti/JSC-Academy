@@ -53,7 +53,6 @@ class AuthService {
       // 5. Generar el token que contiene la información del rol
       const token = createToken({
         id: newUser.id,
-        //email: newUser.email,
       });
       //console.log("hashed pass", hashedPassword);
 
@@ -110,7 +109,7 @@ class AuthService {
       // Comparar el hash almacenado con el hash generado
       if (hashedPassword === userAuth.password) {
         // Si coinciden, generar un nuevo token
-        const token = createToken({ id: user.id, role: user.registrationType });
+        const token = createToken({ id: user.id });
 
         return { message: "Login exitoso", token };
       } else {

@@ -2,6 +2,7 @@ import User from "./users";
 import Auth from "./auth";
 import sequelize from "../database/db";
 import Classe from "./classes";
+import UserClasse from "./users-classes";
 
 User.hasOne(Auth, {
   foreignKey: "userId",
@@ -23,6 +24,6 @@ Classe.belongsToMany(User, {
   foreignKey: "classeId",
 });
 
-sequelize.sync({ force: true });
+sequelize.sync({ alter: true });
 
-export { User, Auth, Classe };
+export { User, Auth, Classe, UserClasse };

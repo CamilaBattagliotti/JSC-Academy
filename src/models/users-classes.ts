@@ -14,7 +14,7 @@ const UserClasse = sequelize.define(
     },
     userId: {
       type: DataTypes.UUID, //no es uuid?
-      allowNull: true,
+      allowNull: false,
       references: {
         model: User,
         key: "id",
@@ -22,12 +22,22 @@ const UserClasse = sequelize.define(
     },
     classeId: {
       type: DataTypes.UUID, ////no es uuid?
-      allowNull: true,
+      allowNull: false,
       references: {
         model: Classe,
         key: "id",
       },
     },
+    enrollmentDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW, // Fecha de inscripción
+    },
+    status: {
+      type: DataTypes.STRING,
+      defaultValue: "active", // Estado de la inscripción (e.g., activo, cancelado)
+    },
   },
   { timestamps: false }
 );
+export default UserClasse;

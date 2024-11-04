@@ -1,6 +1,5 @@
 import * as jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
-import { createToken } from "../utils/token";
 
 function checkJWT(req: Request, res: Response, next: NextFunction) {
   // Obtiene el token desde el header Authorization
@@ -17,7 +16,7 @@ function checkJWT(req: Request, res: Response, next: NextFunction) {
       process.env.ACCESS_SECRET_KEY as jwt.Secret
     ) as any;
 
-    // req._user = await getUserById(data.id);
+    //req._user = await getUserById(data.id);
 
     next();
   } catch (error) {
