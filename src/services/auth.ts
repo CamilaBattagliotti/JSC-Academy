@@ -146,9 +146,12 @@ class AuthService {
       throw new Error("Refresh token invalido");
     }
   }
+
+  // ya no es necesario verificar el token en la base de datos ni borrarlo de ahí
+
   static async logout(token: string) {
     try {
-      // Busca un registro en la base de datos donde el token coincida
+      //Busca un registro en la base de datos donde el token coincida
       const authUser = await Auth.findOne({ where: { token: token } });
       if (!authUser) {
         const error = new Error("Token invalido");
@@ -158,12 +161,9 @@ class AuthService {
       // Devuelve el usuario encontrado si todo está bien
       // Borrar el token de la base de datos
       await Auth.update({ token: "" }, { where: { token: token } });
-      // console.log("user sin token
-      console.log(authUser);
 
-      // Devuelve el usuario encontrado
+      //Devuelve el usuario encontrado
       return authUser;
-      //await Auth.logout(req.body);
     } catch (error) {
       throw error;
     }

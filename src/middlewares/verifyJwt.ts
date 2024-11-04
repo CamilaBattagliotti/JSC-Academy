@@ -1,6 +1,6 @@
 import * as jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
-import { createToken } from "../utils/token";
+//import { isBlacklisted } from "../utils/blacklist";
 
 function checkJWT(req: Request, res: Response, next: NextFunction) {
   // Obtiene el token desde el header Authorization
@@ -11,12 +11,18 @@ function checkJWT(req: Request, res: Response, next: NextFunction) {
     return;
   }
 
+  // // Verifico si el token está en la lista negra:
+  // if (isBlacklisted(token)) {
+  //   res.status(401).json({ error: "Token inválido" });
+  // }
+
   try {
     const data = jwt.verify(
       token,
       process.env.ACCESS_SECRET_KEY as jwt.Secret
     ) as any;
 
+    // Aquí puedes obtener el usuario por su ID, si lo necesitas
     // req._user = await getUserById(data.id);
 
     next();

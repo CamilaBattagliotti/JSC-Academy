@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Auth from "../services/auth";
 import AuthService from "../services/auth";
+//import { addToken } from "../utils/blacklist";
 
 class AuthController {
   static async register(req: Request, res: Response, next: NextFunction) {
@@ -31,18 +32,16 @@ class AuthController {
     }
   }
 
-  // static async logout(req: Request, res: Response, next: NextFunction) {
-  //   try {
-  //     //llamar a la funcion de logout
-  //     res.status(200).json({ message: "Logout exitoso" });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
   static async logout(req: Request, res: Response, next: NextFunction) {
     try {
       const token: any = req.headers.authorization?.split(" ")[1];
-      console.log("Token recibido:", token);
+      if (!token) {
+        res.status(400).json({ message: "Token requerido" });
+      }
+
+      // // Agrega el token a la lista negra
+      // addToken(token);
+
       await Auth.logout(token);
       res.status(200).json({ message: "Logout exitoso" });
     } catch (error) {
