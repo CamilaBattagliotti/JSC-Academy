@@ -1,10 +1,13 @@
 import { UserClasse } from "../models";
 import Classe from "../models/classes";
+import createFilters from "../utils/createFilters";
 
 class ClassesService {
-  static async getAll() {
+  static async getAll(data) {
     try {
-      const classes = await Classe.findAll();
+      const filters = createFilters(data);
+
+      const classes = await Classe.findAndCountAll(filters);
       return classes;
     } catch (error) {
       throw error;

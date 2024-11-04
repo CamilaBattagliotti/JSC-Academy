@@ -5,7 +5,7 @@ import obtenerInformacionDelToken from "../utils/decodeToken";
 class ClassesController {
   static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const classes = await ClassesService.getAll();
+      const classes = await ClassesService.getAll(req.query);
       res.status(200).json({ data: classes });
     } catch (error) {
       next(error);
