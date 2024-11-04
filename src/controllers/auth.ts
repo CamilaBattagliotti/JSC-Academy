@@ -31,11 +31,39 @@ class AuthController {
     }
   }
 
+  // static async logout(req: Request, res: Response, next: NextFunction) {
+  //   try {
+  //     //llamar a la funcion de logout
+  //     res.status(200).json({ message: "Logout exitoso" });
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
   static async logout(req: Request, res: Response, next: NextFunction) {
     try {
+      const token: any = req.headers.authorization?.split(" ")[1];
+      console.log("Token recibido:", token);
+      await Auth.logout(token);
       res.status(200).json({ message: "Logout exitoso" });
     } catch (error) {
       next(error);
+    }
+  }
+  static async refreshToken(req: Request, res: Response, next: NextFunction) {
+    try {
+      const refreshToken = req.headers.refresh as string;
+
+      // if (!refreshToken) {
+      //   return res.status(400).json({ error: "El refresh token es requerido" });
+      // }
+
+      // Llama a AuthService para obtener un nuevo access token
+      const newAccessToken = await AuthService.refreshToken(refreshToken);
+
+      res.status(200).json({ accessToken: newAccessToken });
+    } catch (error) {
+      // Manejo de errores, con mensaje de error adecuado
+      res.status(403).json({ error: error.message });
     }
   }
 }

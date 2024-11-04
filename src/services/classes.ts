@@ -1,9 +1,12 @@
 import Classe from "../models/classes";
+import createFilters from "../utils/createFilters";
 
 class ClassesService {
-  static async getAll() {
+  static async getAll(data) {
     try {
-      const classes = await Classe.findAll();
+      const filters = createFilters(data);
+
+      const classes = await Classe.findAndCountAll(filters);
       return classes;
     } catch (error) {
       throw error;
@@ -24,9 +27,9 @@ class ClassesService {
       throw error;
     }
   }
-  static async getOne(id) {
+  static async getById(id) {
     try {
-      const classe = await Classe.findOne(id);
+      const classe = await Classe.findByPk(id);
       return classe;
     } catch (error) {
       throw error;
@@ -47,7 +50,9 @@ class ClassesService {
   }
   static async update(id, data) {
     try {
-      const classe = await Classe.update(id, data);
+      const classe = await Classe.update(data, {
+        where: { id: id },
+      });
       return classe;
     } catch (error) {
       throw error;

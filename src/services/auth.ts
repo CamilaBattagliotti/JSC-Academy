@@ -3,7 +3,7 @@ import { createSaltAndHash, UUID } from "../utils/createHash";
 import { createToken } from "../utils/token";
 import UsersService from "./users";
 import { validateSignup } from "../schemas/auth";
-import Classe from "../models/classes";
+import * as jwt from "jsonwebtoken";
 
 class AuthService {
   static async register(data: any) {
@@ -116,6 +116,54 @@ class AuthService {
       } else {
         throw new Error("Contraseña incorrecta");
       }
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async refreshToken(refreshToken: string) {
+    if (!refreshToken) {
+      throw new Error("El refresh token es requerido");
+    }
+
+    try {
+      // Verificar el refresh token con la clave secreta específica para refresh tokens
+      const verified = jwt.verify(
+        refreshToken,
+        process.env.REFRESH_SECRET_KEY as jwt.Secret
+      ) as any;
+
+      // Crear un nuevo access token
+      const newAccessToken = jwt.sign(
+        { id: verified.id },
+        process.env.ACCESS_SECRET_KEY as jwt.Secret,
+        {
+          expiresIn: "1h",
+        }
+      );
+
+      return newAccessToken;
+    } catch (error) {
+      throw new Error("Refresh token invalido");
+    }
+  }
+  static async logout(token: string) {
+    try {
+      // Busca un registro en la base de datos donde el token coincida
+      const authUser = await Auth.findOne({ where: { token: token } });
+      if (!authUser) {
+        const error = new Error("Token invalido");
+        error["statusCode"] = 401;
+        throw error;
+      }
+      // Devuelve el usuario encontrado si todo está bien
+      // Borrar el token de la base de datos
+      await Auth.update({ token: "" }, { where: { token: token } });
+      // console.log("user sin token
+      console.log(authUser);
+
+      // Devuelve el usuario encontrado
+      return authUser;
+      //await Auth.logout(req.body);
     } catch (error) {
       throw error;
     }

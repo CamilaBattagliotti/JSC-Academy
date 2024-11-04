@@ -4,7 +4,7 @@ import ClassesService from "../services/classes";
 class ClassesController {
   static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const classes = await ClassesService.getAll();
+      const classes = await ClassesService.getAll(req.query);
       res.status(200).json({ data: classes });
     } catch (error) {
       next(error);
@@ -21,7 +21,7 @@ class ClassesController {
   }
   static async getById(req: Request, res: Response, next: NextFunction) {
     try {
-      const classe = await ClassesService.getOne(req.params.id);
+      const classe = await ClassesService.getById(req.params.id);
       res.status(200).json({ data: classe });
     } catch (error) {
       next(error);
