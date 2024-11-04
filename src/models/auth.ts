@@ -16,6 +16,9 @@ const Auth = sequelize.define("Auth", {
       notEmpty: { msg: "La contraseña no puede estar vacía" },
     },
   },
+  // token: {
+  //   type: DataTypes.STRING,
+  // },
 
   userId: {
     type: DataTypes.UUID,
