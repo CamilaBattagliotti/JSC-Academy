@@ -38,6 +38,23 @@ class AuthController {
       next(error);
     }
   }
+  static async refreshToken(req: Request, res: Response, next: NextFunction) {
+    try {
+      const refreshToken = req.headers.refresh as string;
+
+      // if (!refreshToken) {
+      //   return res.status(400).json({ error: "El refresh token es requerido" });
+      // }
+
+      // Llama a AuthService para obtener un nuevo access token
+      const newAccessToken = await AuthService.refreshToken(refreshToken);
+
+      res.status(200).json({ accessToken: newAccessToken });
+    } catch (error) {
+      // Manejo de errores, con mensaje de error adecuado
+      res.status(403).json({ error: error.message });
+    }
+  }
 }
 
 export default AuthController;
