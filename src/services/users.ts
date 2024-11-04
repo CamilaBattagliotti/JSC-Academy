@@ -1,10 +1,13 @@
 //service logica de negocios..
 import User from "../models/users";
+import createFilters from "../utils/createFilters";
 
 class UserService {
-  static async getAll() {
+  static async getAll(data) {
     try {
-      const users = await User.findAll();
+      const filters = createFilters(data);
+
+      const users = await User.findAndCountAll(filters);
       return users;
     } catch (error) {
       throw error;
