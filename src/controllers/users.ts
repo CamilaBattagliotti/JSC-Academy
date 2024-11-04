@@ -4,7 +4,7 @@ import UserService from "../services/users";
 class UserController {
   static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const users = await UserService.getAll();
+      const users = await UserService.getAll(req.query);
       res.status(200).json({ data: users });
     } catch (error) {
       next(error); //hacer erroshandler
