@@ -18,8 +18,8 @@ const Blacklist = sequelize.define("Blacklist", {
   userId: {
     type: DataTypes.UUID,
     allowNull: false,
-    references: { model: User, key: "id" }, // Relación con el modelo User
-    onDelete: "CASCADE",
+    references: { model: User, key: "id" },
+    // onDelete: "CASCADE",
     validate: {
       notEmpty: { msg: "El id de usuario es requerido" },
     },
