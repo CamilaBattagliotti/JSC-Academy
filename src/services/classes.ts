@@ -60,12 +60,11 @@ class ClassesService {
     }
   }
 
-  static async enroll(classId, userId) {
-    console.log("entre al servicio", classId, userId);
+  static async enroll(classeId:string, userId:string) {
     const date = new Date();
     try {
       const signUp = await UserClasse.create({
-        classId,
+        classeId,
         userId,
         enrollmentDate: date,
         status: "Active",

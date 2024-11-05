@@ -15,13 +15,15 @@ Auth.belongsTo(User, {
 
 // Relación muchos a muchos entre User y Classe
 User.belongsToMany(Classe, {
-  through: "UserClasses", // Nombre de la tabla intermedia
+  through: UserClasse,
   foreignKey: "userId",
+  otherKey: "classeId",
 });
 
 Classe.belongsToMany(User, {
-  through: "UserClasses", // Nombre de la tabla intermedia
+  through: UserClasse,
   foreignKey: "classeId",
+  otherKey: "userId",
 });
 
 sequelize.sync({ alter: true });

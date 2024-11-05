@@ -8,7 +8,6 @@ const Auth = sequelize.define("Auth", {
     allowNull: false,
     primaryKey: true,
   },
-
   password: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -16,10 +15,6 @@ const Auth = sequelize.define("Auth", {
       notEmpty: { msg: "La contraseña no puede estar vacía" },
     },
   },
-  // token: {
-  //   type: DataTypes.STRING,
-  // },
-
   userId: {
     type: DataTypes.UUID,
     allowNull: false,
@@ -30,4 +25,5 @@ const Auth = sequelize.define("Auth", {
     },
   },
 });
+
 export default Auth;

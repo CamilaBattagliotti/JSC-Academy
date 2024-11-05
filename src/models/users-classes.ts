@@ -1,5 +1,5 @@
 import sequelize from "../database/db";
-import { DataTypes, Model } from "../database/db";
+import { DataTypes } from "../database/db";
 import User from "./users";
 import Classe from "./classes";
 
@@ -13,7 +13,7 @@ const UserClasse = sequelize.define(
       allowNull: false,
     },
     userId: {
-      type: DataTypes.UUID, //no es uuid?
+      type: DataTypes.UUID,
       allowNull: false,
       references: {
         model: User,
@@ -21,8 +21,8 @@ const UserClasse = sequelize.define(
       },
     },
     classeId: {
-      type: DataTypes.UUID, ////no es uuid?
-      allowNull: false,
+      type: DataTypes.UUID,
+      allowNull: true,
       references: {
         model: Classe,
         key: "id",
@@ -31,11 +31,11 @@ const UserClasse = sequelize.define(
     enrollmentDate: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW, // Fecha de inscripción
+      defaultValue: DataTypes.NOW,
     },
     status: {
       type: DataTypes.STRING,
-      defaultValue: "active", // Estado de la inscripción (e.g., activo, cancelado)
+      defaultValue: "active",
     },
   },
   { timestamps: false }

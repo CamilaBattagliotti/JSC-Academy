@@ -46,14 +46,12 @@ class ClassesController {
   }
 
   static async enroll(req: Request, res: Response, next: NextFunction) {
-    console.log("entre al controlador", req.headers.authorization);
-
     try {
       const token = req.headers.authorization?.split(" ")[1];
-      const userId = obtenerInformacionDelToken(token);
-      console.log("token decodificado", userId);
-
-      //const signUp = await ClassesService.enroll(req.params.id, req.body);
+      const decodedToken: any = obtenerInformacionDelToken(token);
+      const classeId = req.params.id;
+      const signUp = await ClassesService.enroll(classeId, decodedToken.id);
+      console.log(signUp);
       res.status(201).json({ message: "Successfull enrollment" });
     } catch (error) {
       next(error);
