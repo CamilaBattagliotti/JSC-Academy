@@ -57,5 +57,18 @@ class ClassesController {
       next(error);
     }
   }
+
+  static async unroll(req: any, res: Response, next: NextFunction) {
+    try {
+      const token = req.headers.authorization?.split(" ")[1];
+      const decodedToken: any = obtenerInformacionDelToken(token);
+      const classeId = req.params.id;
+      const unroll = await ClassesService.unroll(classeId, decodedToken.id);
+      console.log(unroll);
+      res.status(201).json({ message: "Successfull unrollment" });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 export default ClassesController;

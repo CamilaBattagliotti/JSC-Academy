@@ -25,5 +25,5 @@ const Auth = sequelize.define("Auth", {
     },
   },
 });
-
+// Auth.sync({force:true})
 export default Auth;

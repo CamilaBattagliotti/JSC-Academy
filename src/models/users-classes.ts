@@ -40,4 +40,5 @@ const UserClasse = sequelize.define(
   },
   { timestamps: false }
 );
+// UserClasse.sync({force:true})
 export default UserClasse;

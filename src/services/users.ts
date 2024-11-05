@@ -1,5 +1,5 @@
 //service logica de negocios..
-import { Classe } from "../models";
+import { Classe, UserClasse } from "../models";
 import User from "../models/users";
 import createFilters from "../utils/createFilters";
 
@@ -31,25 +31,60 @@ class UserService {
       throw error;
     }
   }
+
   static async getById(id) {
-    //ok
     try {
       const user = await User.findByPk(id, {
-        include: {
-          model: Classe,
-          through: { attributes: [] }, // Esto omite los atributos de la tabla intermedia
-        },
+        include: [{
+          model: UserClasse,
+          include: [{
+            model: Classe,
+            attributes: ['id', 'name', 'startDate', 'endDate'], // Atributos de la clase
+          }],
+          attributes: ['status'], // Atributo de la tabla intermedia
+        }],
       });
+
       if (!user) {
-        const error = new Error("Usuario no encontrado");
-        error["statusCode"] = 404;
-        throw error;
+        throw new Error("Usuario no encontrado");
       }
-      return user;
+
+      // Formatear la respuesta
+      const userData = user.toJSON();
+      const classesWithStatus = userData.UserClasses.map(userClass => {
+        return {
+          ...userClass.Classe, // Propiedades de la clase
+          status: userClass.status, // Estado de la tabla intermedia
+        };
+      });
+
+      return {
+        ...userData,
+        Classes: classesWithStatus, // Reemplaza la propiedad Classes
+      };
     } catch (error) {
       throw error;
     }
   }
+  // static async getById(id) {
+  //   //ok
+  //   try {
+  //     const user = await User.findByPk(id, {
+  //       include: {
+  //         model: Classe,
+  //         through: { attributes: [] }, // Esto omite los atributos de la tabla intermedia
+  //       },
+  //     });
+  //     if (!user) {
+  //       const error = new Error("Usuario no encontrado");
+  //       error["statusCode"] = 404;
+  //       throw error;
+  //     }
+  //     return user;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
   static async delete(userId: string) {
     try {
       const user = await User.destroy({ where: { id: userId } });

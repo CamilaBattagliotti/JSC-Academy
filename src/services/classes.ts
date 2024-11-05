@@ -60,7 +60,7 @@ class ClassesService {
     }
   }
 
-  static async enroll(classeId:string, userId:string) {
+  static async enroll(classeId: string, userId: string) {
     const date = new Date();
     try {
       const signUp = await UserClasse.create({
@@ -70,6 +70,38 @@ class ClassesService {
         status: "Active",
       });
       return signUp;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async unroll(classeId: string, userId: string) {
+    const date = new Date();
+    try {
+      // Verifica si el registro existe antes de actualizar
+      const userClass = await UserClasse.findOne({
+        where: { classeId: classeId, userId: userId, status: "Active" },
+      });
+      console.log("UserCLASS", userClass);
+
+      if (!userClass) {
+        throw new Error("No se encontró la inscripción activa para cancelar");
+      }
+
+      const userUnrolled = {
+        enrollmentDate: date,
+        status: "Cancelled",
+      };
+
+      const [updatedCount] = await UserClasse.update(userUnrolled, {
+        where: { classeId: classeId, userId: userId },
+      });
+
+      if (updatedCount === 0) {
+        throw new Error("No se pudo actualizar el estado, verifica los datos");
+      }
+
+      return { message: "Inscripción cancelada correctamente", updatedCount };
     } catch (error) {
       throw error;
     }
