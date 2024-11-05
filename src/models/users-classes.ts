@@ -35,7 +35,7 @@ const UserClasse = sequelize.define(
     },
     status: {
       type: DataTypes.STRING,
-      defaultValue: "active",
+      defaultValue: "Active",
     },
   },
   { timestamps: false }
