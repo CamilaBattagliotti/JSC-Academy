@@ -9,7 +9,7 @@ function createToken(data: string | Object) {
 
   // Aca creo el Access Token
   const accessToken = jwt.sign(data, process.env.ACCESS_SECRET_KEY, {
-    expiresIn: "1h",
+    expiresIn: "2",
   });
 
   // Aca creo el Refresh Token (se solicita para obtener un nuevo acces token cuando este caduca)
