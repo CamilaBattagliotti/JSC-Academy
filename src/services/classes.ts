@@ -1,3 +1,4 @@
+import { UserClasse } from "../models";
 import Classe from "../models/classes";
 import createFilters from "../utils/createFilters";
 
@@ -54,6 +55,21 @@ class ClassesService {
         where: { id: id },
       });
       return classe;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async enroll(classeId:string, userId:string) {
+    const date = new Date();
+    try {
+      const signUp = await UserClasse.create({
+        classeId,
+        userId,
+        enrollmentDate: date,
+        status: "Active",
+      });
+      return signUp;
     } catch (error) {
       throw error;
     }

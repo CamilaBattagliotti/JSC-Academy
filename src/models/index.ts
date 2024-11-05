@@ -2,6 +2,7 @@ import User from "./users";
 import Auth from "./auth";
 import sequelize from "../database/db";
 import Classe from "./classes";
+import UserClasse from "./users-classes";
 
 User.hasOne(Auth, {
   foreignKey: "userId",
@@ -14,15 +15,17 @@ Auth.belongsTo(User, {
 
 // Relación muchos a muchos entre User y Classe
 User.belongsToMany(Classe, {
-  through: "UserClasses", // Nombre de la tabla intermedia
+  through: UserClasse,
   foreignKey: "userId",
+  otherKey: "classeId",
 });
 
 Classe.belongsToMany(User, {
-  through: "UserClasses", // Nombre de la tabla intermedia
+  through: UserClasse,
   foreignKey: "classeId",
+  otherKey: "userId",
 });
 
-sequelize.sync({ force: true });
+sequelize.sync({ alter: true });
 
-export { User, Auth, Classe };
+export { User, Auth, Classe, UserClasse };

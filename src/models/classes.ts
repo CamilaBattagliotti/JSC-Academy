@@ -20,5 +20,4 @@ const Classe = sequelize.define("Classe", {
     allowNull: false,
   },
 });
-
 export default Classe;
