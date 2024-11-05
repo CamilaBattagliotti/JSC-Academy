@@ -32,17 +32,15 @@ class AuthController {
     }
   }
 
-  static async logout(req: Request, res: Response, next: NextFunction) {
+  static async logout(req: any, res: Response, next: NextFunction) {
     try {
       const token: any = req.headers.authorization?.split(" ")[1];
       if (!token) {
         res.status(400).json({ message: "Token requerido" });
       }
+      const userId = req._user.id;
 
-      // // Agrega el token a la lista negra
-      // addToken(token);
-
-      await Auth.logout(token);
+      await Auth.logout(token, userId);
       res.status(200).json({ message: "Logout exitoso" });
     } catch (error) {
       next(error);

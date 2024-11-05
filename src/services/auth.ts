@@ -4,6 +4,7 @@ import { createToken } from "../utils/token";
 import UsersService from "./users";
 import { validateSignup } from "../schemas/auth";
 import * as jwt from "jsonwebtoken";
+import BlacklistService from "./blacklist";
 
 class AuthService {
   static async register(data: any) {
@@ -142,26 +143,15 @@ class AuthService {
     }
   }
 
-  // ya no es necesario verificar el token en la base de datos ni borrarlo de ahí
-
-  static async logout(token: string) {
+  static async logout(token: string, userId: string) {
     try {
-      //Busca un registro en la base de datos donde el token coincida
-      const authUser = await Auth.findOne({ where: { token: token } });
-      if (!authUser) {
-        const error = new Error("Token invalido");
-        error["statusCode"] = 401;
-        throw error;
-      }
-      // Devuelve el usuario encontrado si todo está bien
-      // Borrar el token de la base de datos
-      await Auth.update({ token: "" }, { where: { token: token } });
-      console.log(authUser);
+      await BlacklistService.addToken(token, userId);
 
-      //Devuelve el usuario encontrado
-      return authUser;
+      await Auth.update({ token: "" }, { where: { token: token } });
+
+      return { message: "Logout exitoso, token añadido a la lista negra" };
     } catch (error) {
-      throw error;
+      throw new Error("Error al realizar el logout: " + error.message);
     }
   }
 }

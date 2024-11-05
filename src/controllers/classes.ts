@@ -52,7 +52,7 @@ class ClassesController {
       const classeId = req.params.id;
       const signUp = await ClassesService.enroll(classeId, decodedToken.id);
       console.log(signUp);
-      res.status(201).json({ message: "Successfull enrollment" });
+      res.status(201).json({ message: "Successful enrollment" });
     } catch (error) {
       next(error);
     }
