@@ -12,7 +12,6 @@ class AuthService {
       const result = validateSignup(data);
 
       if (!result.success) {
-        //console.log(result.error, result.error.errors);
 
         const errorMessages = result.error.errors
           .map((err) => err.message)
@@ -53,9 +52,7 @@ class AuthService {
       // 5. Generar el token que contiene la información del rol
       const token = createToken({
         id: newUser.id,
-        //email: newUser.email,
       });
-      //console.log("hashed pass", hashedPassword);
 
       // 6. Guardar el password hasheado y el id del usuario.
       const authRecord = await Auth.create({
@@ -95,7 +92,6 @@ class AuthService {
 
       // Buscar las credenciales del usuario en la tabla 'Auth'
       const userAuth: any = await Auth.findOne({ where: { userId: user.id } });
-      //console.log("el userid es:", user.id);
 
       if (!userAuth) {
         throw new Error("No se encontraron credenciales asociadas al usuario");
@@ -110,7 +106,7 @@ class AuthService {
       // Comparar el hash almacenado con el hash generado
       if (hashedPassword === userAuth.password) {
         // Si coinciden, generar un nuevo token
-        const token = createToken({ id: user.id, role: user.registrationType });
+        const token = createToken({ id: user.id });
 
         return { message: "Login exitoso", token };
       } else {
@@ -158,7 +154,6 @@ class AuthService {
       // Devuelve el usuario encontrado si todo está bien
       // Borrar el token de la base de datos
       await Auth.update({ token: "" }, { where: { token: token } });
-      // console.log("user sin token
       console.log(authUser);
 
       // Devuelve el usuario encontrado

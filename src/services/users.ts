@@ -1,4 +1,5 @@
 //service logica de negocios..
+import { Classe } from "../models";
 import User from "../models/users";
 import createFilters from "../utils/createFilters";
 
@@ -33,7 +34,12 @@ class UserService {
   static async getById(id) {
     //ok
     try {
-      const user = await User.findByPk(id);
+      const user = await User.findByPk(id, {
+        include: {
+          model: Classe,
+          through: { attributes: [] }, // Esto omite los atributos de la tabla intermedia
+        },
+      });
       if (!user) {
         const error = new Error("Usuario no encontrado");
         error["statusCode"] = 404;
