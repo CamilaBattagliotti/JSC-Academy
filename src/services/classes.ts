@@ -2,7 +2,7 @@ import { UserClasse } from "../models";
 import User from "../models/users";
 import Classe from "../models/classes";
 import createFilters from "../utils/createFilters";
-
+import { validateClass, validateUpdatedClass } from "../schemas/classes";
 class ClassesService {
   static async getAll(data) {
     try {
@@ -16,7 +16,20 @@ class ClassesService {
   }
   static async create(data) {
     try {
-      const { name, startDate, endDate } = data;
+      const result = validateClass(data);
+
+      if (!result.success) {
+        const errorMessages = result.error.errors
+          .map((err) => err.message)
+          .join(". ");
+        const error: any = new Error(
+          `Los datos ingresados son inválidos: ${errorMessages}`
+        );
+        error["statusCode"] = 400;
+
+        throw error;
+      }
+      const { name, startDate, endDate } = result.data;
 
       const classe = await Classe.create({
         name,
@@ -57,7 +70,10 @@ class ClassesService {
     try {
       const classe = await Classe.findByPk(id);
       if (!classe) {
-        throw new Error("Clase no encontrada");
+        const error: any = new Error("Clase no encontrada");
+        error["statusCode"] = 404;
+
+        throw error;
       }
 
       await classe.destroy();
@@ -66,12 +82,33 @@ class ClassesService {
       throw error;
     }
   }
+
   static async update(id, data) {
     try {
-      const classe = await Classe.update(data, {
+      const result = validateUpdatedClass(data);
+
+      if (!result.success) {
+        const errorMessages = result.error.errors
+          .map((err) => err.message)
+          .join(". ");
+        const error: any = new Error(
+          `Los datos ingresados son inválidos: ${errorMessages}`
+        );
+        error["statusCode"] = 400;
+
+        throw error;
+      }
+      const [classCount] = await Classe.update(result.data, {
         where: { id: id },
       });
-      return classe;
+
+      if (classCount === 0) {
+        const error = new Error("No se encontró la clase para actualizar");
+        error["statusCode"] = 404;
+        throw error;
+      }
+
+      return { "Numero de registros modificados: ": classCount };
     } catch (error) {
       throw error;
     }
@@ -117,7 +154,11 @@ class ClassesService {
       });
 
       if (updatedCount == 0) {
-        throw new Error("No se pudo actualizar el estado, verifica los datos");
+        const error = new Error(
+          "No se pudo actualizar el estado, verifica los datos"
+        );
+        error["statusCode"] = 404;
+        throw error;
       }
 
       return { message: "Inscripción cancelada correctamente", updatedCount };

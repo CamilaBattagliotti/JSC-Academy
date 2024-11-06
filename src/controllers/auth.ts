@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Auth from "../services/auth";
 import AuthService from "../services/auth";
-//import { addToken } from "../utils/blacklist";
 
 class AuthController {
   static async register(req: Request, res: Response, next: NextFunction) {
@@ -59,7 +58,6 @@ class AuthController {
 
       res.status(200).json({ accessToken: newAccessToken });
     } catch (error) {
-      // Manejo de errores, con mensaje de error adecuado
       res.status(403).json({ error: error.message });
     }
   }

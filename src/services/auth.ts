@@ -2,14 +2,13 @@ import Auth from "../models/auth";
 import { createSaltAndHash, UUID } from "../utils/createHash";
 import { createToken } from "../utils/token";
 import UsersService from "./users";
-import { validateSignup } from "../schemas/auth";
+import { validateSignup, validateLogin } from "../schemas/auth";
 import * as jwt from "jsonwebtoken";
 import BlacklistService from "./blacklist";
 
 class AuthService {
   static async register(data: any) {
     try {
-      // Valido los datos ingresados
       const result = validateSignup(data);
 
       if (!result.success) {
@@ -26,15 +25,15 @@ class AuthService {
       const { username, fullname, email, password, birthdate, nationality } =
         result.data;
 
-      // 1. Verificar si el email ya existe en la tabla de usuarios
-
       const existingUser = await UsersService.getByEmail(email);
 
       if (existingUser) {
-        throw new Error("El usuario ya está registrado");
+        const error: any = new Error("El usuario ya está registrado");
+        error["statusCode"] = 400;
+
+        throw error;
       }
 
-      // 2. Crear el usuario en la tabla de `User`
       const newUser: any = await UsersService.create({
         username,
         fullname,
@@ -81,36 +80,54 @@ class AuthService {
 
   static async login(data: any) {
     try {
-      const { email, password } = data;
+      const result = validateLogin(data);
 
-      // Buscar usuario por su email
+      if (!result.success) {
+        const errorMessages = result.error.errors
+          .map((err) => err.message)
+          .join(". ");
+        const error: any = new Error(
+          `Los datos ingresados son inválidos: ${errorMessages}`
+        );
+        error["statusCode"] = 400;
+
+        throw error;
+      }
+      const { email, password } = result.data;
+
       const user: any = await UsersService.getByEmail(email);
 
       if (!user) {
-        throw new Error("Usuario no encontrado");
+        const error: any = new Error("Usuario no encontrado");
+        error["statusCode"] = 404;
+
+        throw error;
       }
 
-      // Buscar las credenciales del usuario en la tabla 'Auth'
       const userAuth: any = await Auth.findOne({ where: { userId: user.id } });
 
       if (!userAuth) {
-        throw new Error("No se encontraron credenciales asociadas al usuario");
+        const error: any = new Error(
+          "No se encontraron credenciales asociadas al usuario"
+        );
+        error["statusCode"] = 404;
+
+        throw error;
       }
 
-      // Descomponer la contraseña almacenada (salt:hash)
       const [salt, storedHash] = userAuth.password.split(":");
 
-      // Hashear la contraseña ingresada con el mismo salt
       const hashedPassword = createSaltAndHash(password, salt);
 
-      // Comparar el hash almacenado con el hash generado
       if (hashedPassword === userAuth.password) {
-        // Si coinciden, generar un nuevo token
         const token = createToken({ id: user.id });
 
         return { message: "Login exitoso", token };
       } else {
-        throw new Error("Contraseña incorrecta");
+        const error: any = new Error("Contraseña incorrecta");
+        error["statusCode"] = 401;
+
+        throw error;
       }
     } catch (error) {
       throw error;
@@ -118,17 +135,18 @@ class AuthService {
   }
   static async refreshToken(refreshToken: string) {
     if (!refreshToken) {
-      throw new Error("El refresh token es requerido");
+      const error: any = new Error("El refresh token es requerido");
+      error["statusCode"] = 401;
+
+      throw error;
     }
 
     try {
-      // Verificar el refresh token con la clave secreta específica para refresh tokens
       const verified = jwt.verify(
         refreshToken,
         process.env.REFRESH_SECRET_KEY as jwt.Secret
       ) as any;
 
-      // Crear un nuevo access token
       const newAccessToken = jwt.sign(
         { id: verified.id },
         process.env.ACCESS_SECRET_KEY as jwt.Secret,
