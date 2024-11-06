@@ -3,12 +3,6 @@ import Blacklist from "../models/blacklist";
 class BlacklistService {
   static async addToken(token: string, userId: string) {
     try {
-      // const existingToken = await Blacklist.findOne({ where: { token } });
-
-      // if (existingToken) {
-      //   throw new Error("El token ya está en la lista negra");
-      // }
-
       await Blacklist.create({
         token,
         userId,

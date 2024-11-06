@@ -14,10 +14,10 @@ class UserService {
         attributes: { exclude: ["createdAt", "updatedAt"] },
         include: {
           model: Classe,
-          attributes: ["name"], // Solo incluimos el nombre de la clase
+          attributes: ["name"],
           through: {
-            attributes: [], // No incluimos otros atributos de la tabla intermedia
-            where: { status: "Active" }, // Filtramos solo las clases con status "active"
+            attributes: [],
+            where: { status: "Active" },
           },
         },
       });
@@ -70,7 +70,10 @@ class UserService {
       });
 
       if (!user) {
-        throw new Error("Usuario no encontrado");
+        const error: any = new Error("Usuario no encontrado");
+        error["statusCode"] = 404;
+
+        throw error;
       }
       return user;
     } catch (error) {
@@ -118,7 +121,7 @@ class UserService {
 
   static async getByEmail(email) {
     try {
-      const user = await User.findOne({ where: { email: email } }); //???
+      const user = await User.findOne({ where: { email: email } });
       return user;
     } catch (error) {
       throw error;
