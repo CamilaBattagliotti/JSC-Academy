@@ -3,6 +3,7 @@ import { Classe, UserClasse } from "../models";
 import User from "../models/users";
 import createFilters from "../utils/createFilters";
 import { validateUser, validateUserUpdate } from "../schemas/users";
+import Logger from "../lib/winston";
 
 class UserService {
   static async getAll(data) {
@@ -84,6 +85,7 @@ class UserService {
   static async delete(userId: string) {
     try {
       const user = await User.destroy({ where: { id: userId } });
+      Logger.info("Usuario eliminado");
       return user;
     } catch (error) {
       throw error;
@@ -104,8 +106,9 @@ class UserService {
 
         throw error;
       }
-      const [usersCount] = await User.update(result.data, {
+      const [usersCount, user] = await User.update(result.data, {
         where: { id: id },
+        returning: true,
       });
 
       if (usersCount == 0) {
@@ -113,7 +116,8 @@ class UserService {
         error["statusCode"] = 404;
         throw error;
       }
-      return { "Numero de registros modificados: ": usersCount };
+      Logger.info("Usuario modificado");
+      return { "Usuario modificado": user };
     } catch (error) {
       throw error;
     }
