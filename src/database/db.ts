@@ -6,14 +6,14 @@ dotenv.config();
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, PORT } = process.env;
 
 // Local.
-const sequelize = new Sequelize(
-  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${PORT || 5432}/${DB_NAME}`
-);
+// const sequelize = new Sequelize(
+//   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${PORT || 5432}/${DB_NAME}`
+// );
 
 // Deploy(desde postman). URL publica de nuestra db.
-// const sequelize = new Sequelize(
-//   `postgresql://postgres:qetXZBGABAZCezKIFcLdyTHxuklgbQdt@autorack.proxy.rlwy.net:46871/railway`
-// );
+const sequelize = new Sequelize(
+  `postgresql://postgres:qetXZBGABAZCezKIFcLdyTHxuklgbQdt@autorack.proxy.rlwy.net:46871/railway`
+);
 
 async function authenticate() {
   try {
