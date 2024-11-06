@@ -1,68 +1,53 @@
-<h1 align="center">  DESAFÍO FINAL  </h1>
-<h4 align="center"> Desarrollo Backend con NodeJS </h4>
 
-¡FELICITACIONES por haber llegado hasta acá! Ahora sólamente queda este último trabajo grupal... ¡Qué lo disfruten!
+# Proyecto Final Backend - Gestión de Usuarios y Clases -
 
----
+¡Bienvenides a nuestro último desafío en el curso de Desarrollo Backend con Node.js! 
 
-Desarrollar un sistema de autenticación y administración de usuarios que permita:
+Este proyecto es el resultado de dos semanas de horas de código, trabajo en equipo y mucho mate, fideos y risas. 
 
-- ABM de clases: CRUD de clases a la que asistirán los usuarios
 
-- Register: Crear un nuevo usuario
-- Login: Inicio de sesión
-- Logout: Cierre de sesión
-- Update: Actualizar la información relativa a un usuario
-- Delete: Eliminar un usuario (se tiene que borrar tanto el registro del usuario como del de auth)
-- Desvincularse de una clase
-- Ingresar a una nueva clase
+##  📚 Descripción del Proyecto
 
-Este backend tiene que tener arquitectura REST y MVCs, así que repasen y piensen bien el nombre de los endpoints, qué rol cumple cada capa de la app, etc...
+Creamos un sistema de autenticación y administración de usuarios que permite:
 
-La entidad usuario tiene los siguientes campos:
+- ABM de Clases: Las clases a las que los usuarios pueden inscribirse, con opciones de vinculación y desvinculación.
+- Registro y Autenticación: Creación de cuenta, inicio y cierre de sesión de usuarios.
+- Actualización y Borrado de Usuarios: Gestión completa de los datos de usuario y eliminación en cascada.
+- Roles y Seguridad: Control de acceso y robustas medidas de seguridad.
 
-- id: string
-- username: string
-- fullname: string
-- password: string (8 caracteres como minimo, debe incluir numeros, letras en mayusculas y minusculas, y caracteres espaciales)
-- email: string
-- birthdate: Date
-- nationality: string
+## ⚙️ Tecnologías Utilizadas
 
-La entidad clase tiene los siguientes campos:
+- Backend: Node.js, Express, Sequelize, PostgreSQL
+- Autenticación: JWT (JSON Web Tokens) con Refresh Tokens
+- Validación: ZOD
+- Seguridad: Contraseñas encriptadas con salt, HelmetJS para protección de cabeceras HTTP, WinstonJS para logging
 
-- id: string
-- name: string
-- startDate: Date
-- endDate: Date
+## 🏗️ Arquitectura REST con MVC
 
-INVESTIGAR CÓMO RELACIONAR LAS ENTIDADES ENTRE SÍ, CARDINALIDAD, ETC
+Nos aseguramos de seguir la estructura REST y el patrón MVCS para un código limpio y fácil de escalar. ¡Todo está organizado y cada capa cumple su rol al pie de la letra!
 
-#### A TENER EN CUENTA
+## 📋 Funcionalidades
 
-- Investigar que cosa son los refresh tokens, para qué se usan, e implementarlos. Siempre respetando la arquitectura REST.
-- Implementar WinstonJS. Úsenla donde ustedes juzgen necesario.
-- Implementar paginación.
-- Para este proyecto NO pueden usar ElephantSQL, tienen que usar otro servicio de Postgres as a Service.
-- Investigar qué cosa es HelmetJS, para qué sirve e implementarlo. Pista: hay un apartado en la documentación de Express que hace referencia a esta herramienta.
+- ABM de Clases: CRUD completo de clases.
+- Registro y Login y Logout de Usuarios: Incluye validación de contraseña y email y lista negra de tokens expirados y revocados.
+- Inscripción a Clases: Los usuarios pueden inscribirse y desvincularse de clases a través de relaciones entre entidades.
+- Seguridad y Autenticación Avanzadas: Sistema de Refresh Tokens para sesiones prolongadas y HelmetJS para mejorar la seguridad.
 
-<h2 align="center"> CONDICIONES DE APROBACIÓN </h2>
 
-- El código tiene que estar 100% operativo, sin fallas ni errores no tratados. Así que dediquen un buen tiempo a testear todo.
-- El archivo README.md tiene que incluir un link a la documenetación online hecha con Postman. Incluir ejemplos claros.
-- Usar bases de datos relacionales con Sequelize y PostgreSQL.
-- Usar variables de entorno e inicializarlo en un módulo aparte.
-- Tomar todas las medidas de seguridad vistas en clase:
-  - No filtrar llaves de acceso
-  - Encriptar contraseñas
-  - Usar salt.
-  - Usar JWT e implementarlo mediante middlewares.
-- Validar datos con ZOD.
-- NO INCLUIR COMENTARIOS, a menos de que sea para explicar el por qué tomaron cierto camino, en caso de ser necesario.
-- NO INCLUIR CONSOLE.LOG()
 
-#### LINKS DE AYUDA
 
-- [WinstonJS](https://www.npmjs.com/package/winston?activeTab=dependents)
-- [Guia completa de WinstonJS](https://betterstack.com/community/guides/logging/how-to-install-setup-and-use-winston-and-morgan-to-log-node-js-applications/)
-- [Cardinalidad BB.DD](https://help.tableau.com/current/pro/desktop/es-es/cardinality_and_ri.htm)
+## 📖 Documentación y Deploy
+La API está documentada en Swagger. Consulta los detalles y ejemplos de cada endpoint en nuestro [Swagger Online](https://eloquent-freedom-production.up.railway.app/api-docs/)
+
+La API y la base de datos están desplegadas en [Railway](https://eloquent-freedom-production.up.railway.app)
+
+## 👩‍💻 Team Backend 👨‍💻
+
+Nos presentamos, ¡el equipazo que hizo esto posible!
+
+### ♓ Cami
+[Github](https://github.com/CamilaBattagliotti) -  [Linkedin](https://www.linkedin.com/in/camila-battagliotti/)
+### ♒ Jime 
+[Github](https://github.com/JimeJai) -  [Linkedin](https://www.linkedin.com/in/jimena-miramontes-265800310/)
+### ♎ Sofi
+[Github](https://github.com/Sofiferrer) -  [Linkedin](https://www.linkedin.com/in/ferrer-sofia/)
