@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Auth from "../services/auth";
 import AuthService from "../services/auth";
-//import { addToken } from "../utils/blacklist";
 
 class AuthController {
   static async register(req: Request, res: Response, next: NextFunction) {

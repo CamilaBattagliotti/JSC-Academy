@@ -41,7 +41,7 @@ const registerSchema = z
   })
   .strict();
 
-export function validateSignup(data: any) {
+export function validateSignup(data) {
   return registerSchema.safeParse(data);
 }
 
@@ -52,17 +52,12 @@ const loginSchema = z
         required_error: "El email es requerido",
       })
       .email("El email ingresado tiene un formato invalido"),
-    password: z
-      .string({
-        required_error: "La contrasena es requerida",
-      })
-      .min(6, { message: "La contrasena debe tener mas de 6 caracteres" })
-      .max(15, {
-        message: "La contrasena debe tener un maximo de 15 caracteres",
-      }),
+    password: z.string({
+      required_error: "La contrasena es requerida",
+    }),
   })
   .strict();
 
-export function validateLogin(data: any) {
+export function validateLogin(data) {
   return loginSchema.safeParse(data);
 }

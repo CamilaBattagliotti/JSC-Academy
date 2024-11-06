@@ -1,45 +1,52 @@
 import { z } from "zod";
 
-const userSchema = z.object({
-  name: z
-    .string({
-      required_error: "El nombre es requerido",
-    })
-    .min(3, { message: "El nombre debe tener mas de 3 caracteres" })
-    .max(15, { message: "El nombre debe tener menos de 15 caracteres" })
-    .optional(),
-  email: z
-    .string({
-      required_error: "El email es requerido",
-    })
-    .email("El email ingresado tiene un formato invalido")
-    .optional(),
-  password: z
-    .string({
-      required_error: "La contrasena es requerida",
-    })
-    .min(6, { message: "La contrasena debe tener mas de 6 caracteres" })
-    .max(15, {
-      message: "La contrasena debe tener un maximo de 15 caracteres",
-    })
-    .optional(),
-  lastName: z
-    .string({
-      required_error: "El apellido es requerido",
-    })
-    .min(3, { message: "El apellido debe tener mas de 3 caracteres" })
-    .max(15, { message: "El apellido debe tener menos de 15 caracteres" })
-    .optional(),
-  phoneNumber: z
-    .number({
-      required_error: "El numero de telefono es requerido",
-      invalid_type_error: "El numero de telefono debe ser un numero",
-    })
-    .int()
-    .optional(),
-  registrationType: z.enum(["Client", "Seller", "Admin"]).optional(),
-});
+const userSchema = z
+  .object({
+    username: z
+      .string({
+        required_error: "El nombre de usuario es requerido",
+      })
+      .min(3, {
+        message: "El nombre de usuario debe tener al menos 3 caracteres",
+      })
+      .max(20, {
+        message: "El nombre de usuario debe tener menos de 20 caracteres",
+      }),
+    fullname: z
+      .string({
+        required_error: "El nombre completo es requerido",
+      })
+      .min(3, {
+        message: "El nombre completo debe tener al menos 3 caracteres",
+      })
+      .max(40, {
+        message: "El nombre completo debe tener menos de 40 caracteres",
+      }),
+    email: z
+      .string({
+        required_error: "El email es requerido",
+      })
+      .email("El email ingresado tiene un formato inválido"),
+    birthdate: z.string({
+      required_error: "La fecha de nacimiento es requerida",
+    }),
+    nationality: z
+      .string({
+        required_error: "La nacionalidad es requerida",
+      })
+      .min(3, { message: "La nacionalidad debe tener al menos 3 caracteres" })
+      .max(20, {
+        message: "La nacionalidad debe tener menos de 20 caracteres",
+      }),
+  })
+  .strict();
 
-export function validateUser(data: any) {
+export function validateUser(data) {
   return userSchema.safeParse(data);
+}
+
+const userUpdateSchema = userSchema.partial();
+
+export function validateUserUpdate(data) {
+  return userUpdateSchema.safeParse(data);
 }

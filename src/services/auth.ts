@@ -2,14 +2,13 @@ import Auth from "../models/auth";
 import { createSaltAndHash, UUID } from "../utils/createHash";
 import { createToken } from "../utils/token";
 import UsersService from "./users";
-import { validateSignup } from "../schemas/auth";
+import { validateSignup, validateLogin } from "../schemas/auth";
 import * as jwt from "jsonwebtoken";
 import BlacklistService from "./blacklist";
 
 class AuthService {
   static async register(data: any) {
     try {
-      // Valido los datos ingresados
       const result = validateSignup(data);
 
       if (!result.success) {
@@ -81,31 +80,38 @@ class AuthService {
 
   static async login(data: any) {
     try {
-      const { email, password } = data;
+      const result = validateLogin(data);
 
-      // Buscar usuario por su email
+      if (!result.success) {
+        const errorMessages = result.error.errors
+          .map((err) => err.message)
+          .join(". ");
+        const error: any = new Error(
+          `Los datos ingresados son inválidos: ${errorMessages}`
+        );
+        error["statusCode"] = 400;
+
+        throw error;
+      }
+      const { email, password } = result.data;
+
       const user: any = await UsersService.getByEmail(email);
 
       if (!user) {
         throw new Error("Usuario no encontrado");
       }
 
-      // Buscar las credenciales del usuario en la tabla 'Auth'
       const userAuth: any = await Auth.findOne({ where: { userId: user.id } });
 
       if (!userAuth) {
         throw new Error("No se encontraron credenciales asociadas al usuario");
       }
 
-      // Descomponer la contraseña almacenada (salt:hash)
       const [salt, storedHash] = userAuth.password.split(":");
 
-      // Hashear la contraseña ingresada con el mismo salt
       const hashedPassword = createSaltAndHash(password, salt);
 
-      // Comparar el hash almacenado con el hash generado
       if (hashedPassword === userAuth.password) {
-        // Si coinciden, generar un nuevo token
         const token = createToken({ id: user.id });
 
         return { message: "Login exitoso", token };
@@ -122,13 +128,11 @@ class AuthService {
     }
 
     try {
-      // Verificar el refresh token con la clave secreta específica para refresh tokens
       const verified = jwt.verify(
         refreshToken,
         process.env.REFRESH_SECRET_KEY as jwt.Secret
       ) as any;
 
-      // Crear un nuevo access token
       const newAccessToken = jwt.sign(
         { id: verified.id },
         process.env.ACCESS_SECRET_KEY as jwt.Secret,
