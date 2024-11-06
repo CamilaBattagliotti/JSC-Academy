@@ -16,12 +16,14 @@ Auth.belongsTo(User, {
 // Relación muchos a muchos entre User y Classe
 User.belongsToMany(Classe, {
   through: UserClasse,
+  onDelete: "CASCADE",
   foreignKey: "userId",
   otherKey: "classeId",
 });
 
 Classe.belongsToMany(User, {
   through: UserClasse,
+  onDelete: "CASCADE",
   foreignKey: "classeId",
   otherKey: "userId",
 });

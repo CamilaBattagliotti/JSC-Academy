@@ -8,7 +8,18 @@ class UserService {
     try {
       const filters = createFilters(data);
 
-      const users = await User.findAndCountAll(filters);
+      const users = await User.findAndCountAll({
+        ...filters,
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+        include: {
+          model: Classe,
+          attributes: ["name"], // Solo incluimos el nombre de la clase
+          through: {
+            attributes: [], // No incluimos otros atributos de la tabla intermedia
+            where: { status: "Active" }, // Filtramos solo las clases con status "active"
+          },
+        },
+      });
       return users;
     } catch (error) {
       throw error;
@@ -32,59 +43,27 @@ class UserService {
     }
   }
 
-  static async getById(id) {
+  static async getById(id: string) {
     try {
       const user = await User.findByPk(id, {
-        include: [{
-          model: UserClasse,
-          include: [{
-            model: Classe,
-            attributes: ['id', 'name', 'startDate', 'endDate'], // Atributos de la clase
-          }],
-          attributes: ['status'], // Atributo de la tabla intermedia
-        }],
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+
+        include: {
+          model: Classe,
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+          through: { attributes: ["status", "enrollmentDate"] },
+        },
       });
 
       if (!user) {
         throw new Error("Usuario no encontrado");
       }
-
-      // Formatear la respuesta
-      const userData = user.toJSON();
-      const classesWithStatus = userData.UserClasses.map(userClass => {
-        return {
-          ...userClass.Classe, // Propiedades de la clase
-          status: userClass.status, // Estado de la tabla intermedia
-        };
-      });
-
-      return {
-        ...userData,
-        Classes: classesWithStatus, // Reemplaza la propiedad Classes
-      };
+      return user;
     } catch (error) {
       throw error;
     }
   }
-  // static async getById(id) {
-  //   //ok
-  //   try {
-  //     const user = await User.findByPk(id, {
-  //       include: {
-  //         model: Classe,
-  //         through: { attributes: [] }, // Esto omite los atributos de la tabla intermedia
-  //       },
-  //     });
-  //     if (!user) {
-  //       const error = new Error("Usuario no encontrado");
-  //       error["statusCode"] = 404;
-  //       throw error;
-  //     }
-  //     return user;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
+
   static async delete(userId: string) {
     try {
       const user = await User.destroy({ where: { id: userId } });
