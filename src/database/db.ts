@@ -37,7 +37,7 @@ async function checkIfTableExists() {
 
 // Autenticación y verificación de la tabla
 (async () => {
-  sequelize.sync();
+  //sequelize.sync({ alter: true });
   await authenticate();
   await checkIfTableExists();
 })();

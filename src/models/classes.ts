@@ -20,4 +20,5 @@ const Classe = sequelize.define("Classe", {
     allowNull: false,
   },
 });
+// Classe.sync({force:true})
 export default Classe;

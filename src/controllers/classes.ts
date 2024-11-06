@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import ClassesService from "../services/classes";
-import obtenerInformacionDelToken from "../utils/decodeToken";
+//import getInfoToken from "../utils/decodeToken";
 
 class ClassesController {
   static async getAll(req: Request, res: Response, next: NextFunction) {
@@ -45,14 +45,25 @@ class ClassesController {
     }
   }
 
-  static async enroll(req: Request, res: Response, next: NextFunction) {
+  static async enroll(req: any, res: Response, next: NextFunction) {
     try {
-      const token = req.headers.authorization?.split(" ")[1];
-      const decodedToken: any = obtenerInformacionDelToken(token);
+      //const token = req.headers.authorization?.split(" ")[1];
+      //const decodedToken: any = getInfoToken(token);
       const classeId = req.params.id;
-      const signUp = await ClassesService.enroll(classeId, decodedToken.id);
-      console.log(signUp);
+      await ClassesService.enroll(classeId, req._user.id);
       res.status(201).json({ message: "Successful enrollment" });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async unroll(req: any, res: Response, next: NextFunction) {
+
+    try {
+      const userId = req._user.id;
+      const classeId = req.params.id;
+      const unroll = await ClassesService.unroll(classeId, userId);
+      res.status(201).json({ message: "Successful unrollment" });
     } catch (error) {
       next(error);
     }

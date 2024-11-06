@@ -1,5 +1,5 @@
 //service logica de negocios..
-import { Classe } from "../models";
+import { Classe, UserClasse } from "../models";
 import User from "../models/users";
 import createFilters from "../utils/createFilters";
 
@@ -8,7 +8,18 @@ class UserService {
     try {
       const filters = createFilters(data);
 
-      const users = await User.findAndCountAll(filters);
+      const users = await User.findAndCountAll({
+        ...filters,
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+        include: {
+          model: Classe,
+          attributes: ["name"], // Solo incluimos el nombre de la clase
+          through: {
+            attributes: [], // No incluimos otros atributos de la tabla intermedia
+            where: { status: "Active" }, // Filtramos solo las clases con status "active"
+          },
+        },
+      });
       return users;
     } catch (error) {
       throw error;
@@ -31,25 +42,28 @@ class UserService {
       throw error;
     }
   }
-  static async getById(id) {
-    //ok
+
+  static async getById(id: string) {
     try {
       const user = await User.findByPk(id, {
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+
         include: {
           model: Classe,
-          through: { attributes: [] }, // Esto omite los atributos de la tabla intermedia
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+          through: { attributes: ["status", "enrollmentDate"] },
         },
       });
+
       if (!user) {
-        const error = new Error("Usuario no encontrado");
-        error["statusCode"] = 404;
-        throw error;
+        throw new Error("Usuario no encontrado");
       }
       return user;
     } catch (error) {
       throw error;
     }
   }
+
   static async delete(userId: string) {
     try {
       const user = await User.destroy({ where: { id: userId } });

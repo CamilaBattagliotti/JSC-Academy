@@ -1,4 +1,5 @@
 import { UserClasse } from "../models";
+import User from "../models/users";
 import Classe from "../models/classes";
 import createFilters from "../utils/createFilters";
 
@@ -30,7 +31,23 @@ class ClassesService {
   }
   static async getById(id) {
     try {
-      const classe = await Classe.findByPk(id);
+      const classe = await Classe.findByPk(id, {
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+
+        include: {
+          model: User,
+          attributes: {
+            exclude: [
+              "createdAt",
+              "updatedAt",
+              "email",
+              "birthdate",
+              "id",
+              "nationality",
+            ],
+          },
+        },
+      });
       return classe;
     } catch (error) {
       throw error;
@@ -60,7 +77,7 @@ class ClassesService {
     }
   }
 
-  static async enroll(classeId:string, userId:string) {
+  static async enroll(classeId: string, userId: string) {
     const date = new Date();
     try {
       const signUp = await UserClasse.create({
@@ -70,6 +87,40 @@ class ClassesService {
         status: "Active",
       });
       return signUp;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async unroll(classeId: string, userId: string) {
+    const date = new Date();
+    try {
+      const userClass = await UserClasse.findOne({
+        where: { classeId: classeId, userId: userId, status: "Active" },
+      });
+
+      if (!userClass) {
+        const error = new Error(
+          "No se encontró la inscripción activa para cancelar"
+        );
+        error["statusCode"] = 404;
+        throw error;
+      }
+
+      const userUnrolled = {
+        enrollmentDate: date,
+        status: "Cancelled",
+      };
+
+      const [updatedCount] = await UserClasse.update(userUnrolled, {
+        where: { classeId: classeId, userId: userId, status: "Active" },
+      });
+
+      if (updatedCount == 0) {
+        throw new Error("No se pudo actualizar el estado, verifica los datos");
+      }
+
+      return { message: "Inscripción cancelada correctamente", updatedCount };
     } catch (error) {
       throw error;
     }
