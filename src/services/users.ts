@@ -2,6 +2,7 @@
 import { Classe, UserClasse } from "../models";
 import User from "../models/users";
 import createFilters from "../utils/createFilters";
+import { validateUser, validateUserUpdate } from "../schemas/users";
 
 class UserService {
   static async getAll(data) {
@@ -27,7 +28,20 @@ class UserService {
   }
   static async create(data) {
     try {
-      const { username, fullname, email, birthdate, nationality } = data;
+      const result = validateUser(data);
+
+      if (!result.success) {
+        const errorMessages = result.error.errors
+          .map((err) => err.message)
+          .join(". ");
+        const error: any = new Error(
+          `Los datos ingresados son inválidos: ${errorMessages}`
+        );
+        error["statusCode"] = 400;
+
+        throw error;
+      }
+      const { username, fullname, email, birthdate, nationality } = result.data;
 
       const user = await User.create({
         username,
@@ -74,15 +88,29 @@ class UserService {
   }
   static async update(id, data) {
     try {
-      const [filasActualizadas] = await User.update(data, {
+      const result = validateUserUpdate(data);
+
+      if (!result.success) {
+        const errorMessages = result.error.errors
+          .map((err) => err.message)
+          .join(". ");
+        const error: any = new Error(
+          `Los datos ingresados son inválidos: ${errorMessages}`
+        );
+        error["statusCode"] = 400;
+
+        throw error;
+      }
+      const [usersCount] = await User.update(result.data, {
         where: { id: id },
       });
 
-      if (filasActualizadas == 0) {
+      if (usersCount == 0) {
         const error = new Error("Error al actualizar el usuario");
         error["statusCode"] = 404;
         throw error;
       }
+      return { "Numero de registros modificados: ": usersCount };
     } catch (error) {
       throw error;
     }

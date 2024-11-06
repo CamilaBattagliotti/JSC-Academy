@@ -58,7 +58,6 @@ class ClassesController {
   }
 
   static async unroll(req: any, res: Response, next: NextFunction) {
-
     try {
       const userId = req._user.id;
       const classeId = req.params.id;
