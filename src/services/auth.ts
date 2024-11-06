@@ -25,15 +25,15 @@ class AuthService {
       const { username, fullname, email, password, birthdate, nationality } =
         result.data;
 
-      // 1. Verificar si el email ya existe en la tabla de usuarios
-
       const existingUser = await UsersService.getByEmail(email);
 
       if (existingUser) {
-        throw new Error("El usuario ya está registrado");
+        const error: any = new Error("El usuario ya está registrado");
+        error["statusCode"] = 400;
+
+        throw error;
       }
 
-      // 2. Crear el usuario en la tabla de `User`
       const newUser: any = await UsersService.create({
         username,
         fullname,
@@ -98,13 +98,21 @@ class AuthService {
       const user: any = await UsersService.getByEmail(email);
 
       if (!user) {
-        throw new Error("Usuario no encontrado");
+        const error: any = new Error("Usuario no encontrado");
+        error["statusCode"] = 404;
+
+        throw error;
       }
 
       const userAuth: any = await Auth.findOne({ where: { userId: user.id } });
 
       if (!userAuth) {
-        throw new Error("No se encontraron credenciales asociadas al usuario");
+        const error: any = new Error(
+          "No se encontraron credenciales asociadas al usuario"
+        );
+        error["statusCode"] = 404;
+
+        throw error;
       }
 
       const [salt, storedHash] = userAuth.password.split(":");
@@ -116,7 +124,10 @@ class AuthService {
 
         return { message: "Login exitoso", token };
       } else {
-        throw new Error("Contraseña incorrecta");
+        const error: any = new Error("Contraseña incorrecta");
+        error["statusCode"] = 401;
+
+        throw error;
       }
     } catch (error) {
       throw error;
@@ -124,7 +135,10 @@ class AuthService {
   }
   static async refreshToken(refreshToken: string) {
     if (!refreshToken) {
-      throw new Error("El refresh token es requerido");
+      const error: any = new Error("El refresh token es requerido");
+      error["statusCode"] = 401;
+
+      throw error;
     }
 
     try {

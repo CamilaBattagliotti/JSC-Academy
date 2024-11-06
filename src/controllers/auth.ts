@@ -58,7 +58,6 @@ class AuthController {
 
       res.status(200).json({ accessToken: newAccessToken });
     } catch (error) {
-      // Manejo de errores, con mensaje de error adecuado
       res.status(403).json({ error: error.message });
     }
   }

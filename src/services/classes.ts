@@ -70,7 +70,10 @@ class ClassesService {
     try {
       const classe = await Classe.findByPk(id);
       if (!classe) {
-        throw new Error("Clase no encontrada");
+        const error: any = new Error("Clase no encontrada");
+        error["statusCode"] = 404;
+
+        throw error;
       }
 
       await classe.destroy();
@@ -79,6 +82,7 @@ class ClassesService {
       throw error;
     }
   }
+
   static async update(id, data) {
     try {
       const result = validateUpdatedClass(data);
@@ -150,7 +154,11 @@ class ClassesService {
       });
 
       if (updatedCount == 0) {
-        throw new Error("No se pudo actualizar el estado, verifica los datos");
+        const error = new Error(
+          "No se pudo actualizar el estado, verifica los datos"
+        );
+        error["statusCode"] = 404;
+        throw error;
       }
 
       return { message: "Inscripción cancelada correctamente", updatedCount };
