@@ -22,222 +22,755 @@
       "description": "Online academy"
     },
     {
+      "name": "auth",
+      "description": "Auth operations"
+    },
+    {
       "name": "user",
       "description": "Operations about user"
     },
     {
       "name": "class",
       "description": "Class CRUD"
-    },
-    {
-      "name": "auth",
-      "description": "Auth operations"
     }
   ],
   "paths": {
-    "/users": {
-      "get": {
-        "tags": ["user"],
-        "summary": "Returns all users",
-        "description": "",
-        "operationId": "getAll",
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "integer",
-                    "format": "int32"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["user"],
-        "summary": "Create new user",
-        "description": "",
-        "operationId": "create",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Order"
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "$ref": "#/components/schemas/Order"
-              }
-            },
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/Order"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Order"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input"
-          },
-          "422": {
-            "description": "Validation exception"
-          }
-        }
-      }
-    },
     "/auth/register": {
       "post": {
-        "tags": ["auth"],
-        "summary": "Register a new user",
-        "description": "Creates a new user account with the provided credentials.",
-        "operationId": "registerUser",
+        "tags": [
+          "auth"
+        ],
+        "summary": "Registro de un nuevo usuario",
+        "description": "Crea un nuevo usuario y devuelve el token de acceso.",
         "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/User"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "User created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input"
-          },
-          "422": {
-            "description": "Validation exception"
-          }
-        }
-      }
-    },
-
-    "/auth/login": {
-      "post": {
-        "tags": ["auth"],
-        "summary": "Login to the system",
-        "description": "Authenticates the user and provides a token upon successful login.",
-        "operationId": "loginUser",
-        "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
                   "username": {
+                    "type": "string"
+                  },
+                  "fullname": {
+                    "type": "string"
+                  },
+                  "email": {
                     "type": "string",
-                    "example": "theUser"
+                    "format": "email"
                   },
                   "password": {
+                    "type": "string"
+                  },
+                  "birthdate": {
                     "type": "string",
-                    "example": "12345"
+                    "format": "date"
+                  },
+                  "nationality": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "username",
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuario registrado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "newUser": {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    "token": {
+                      "type": "string"
+                    }
                   }
                 }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Iniciar sesión",
+        "description": "Autentica al usuario y devuelve un token de acceso.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "User logged in successfully, returns token",
+            "description": "Inicio de sesión exitoso",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuthResponse"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "token": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
           },
-          "401": {
-            "description": "Invalid credentials"
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "404": {
+            "description": "Usuario no encontrado"
           }
         }
       }
     },
     "/auth/logout": {
       "post": {
-        "tags": ["auth"],
-        "summary": "Logout the user",
-        "description": "Logs the user out by invalidating the current access token. Requires a valid JWT.",
-        "operationId": "logoutUser",
+        "tags": [
+          "auth"
+        ],
+        "summary": "Cerrar sesión",
+        "description": "Revoca el token de acceso del usuario, impidiéndole usarlo nuevamente.",
         "security": [
           {
-            "BearerAuth": []
+            "bearerAuth": []
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully logged out"
+            "description": "Logout exitoso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Token required"
+            "description": "Token requerido"
           },
           "401": {
-            "description": "Unauthorized: Invalid token"
+            "description": "Token revocado o inválido"
           }
         }
       }
     },
     "/auth/refresh-token": {
       "post": {
-        "tags": ["auth"],
-        "summary": "Refresh the authentication token",
-        "description": "Generates a new access token using a valid refresh token.",
-        "operationId": "refreshToken",
+        "tags": [
+          "auth"
+        ],
+        "summary": "Refrescar token de acceso",
+        "description": "Genera un nuevo token de acceso utilizando un refresh token válido.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
                   "refreshToken": {
-                    "type": "string",
-                    "example": "valid-refresh-token"
+                    "type": "string"
                   }
-                }
+                },
+                "required": [
+                  "refreshToken"
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "New access token issued",
+            "description": "Nuevo token de acceso generado",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuthTokens"
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
           },
-          "401": {
-            "description": "Unauthorized: Invalid or expired refresh token"
+          "400": {
+            "description": "Refresh token requerido"
+          },
+          "403": {
+            "description": "Refresh token inválido"
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Obtener todos los usuarios",
+        "description": "Obtiene una lista de usuarios, incluyendo sus clases activas.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Número de página para paginación"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Cantidad de usuarios por página"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuarios",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Obtener un usuario por ID",
+        "description": "Retorna los detalles de un usuario específico, incluyendo sus clases.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID del usuario"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalles del usuario",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Actualizar un usuario por ID",
+        "description": "Actualiza los datos de un usuario específico.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID del usuario"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuario actualizado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User updated"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "Numero de registros modificados:": {
+                          "type": "integer",
+                          "example": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Eliminar un usuario por ID",
+        "description": "Elimina un usuario específico del sistema.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID del usuario"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuario eliminado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User deleted"
+                    },
+                    "data": {
+                      "type": "integer",
+                      "example": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          }
+        }
+      }
+    },
+    "/classes": {
+      "post": {
+        "tags": [
+          "class"
+        ],
+        "summary": "Crear una clase",
+        "description": "Crea una nueva clase en el sistema.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Nombre de la clase"
+                  },
+                  "startDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Fecha de inicio de la clase"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Fecha de finalización de la clase"
+                  }
+                },
+                "required": [
+                  "name",
+                  "startDate",
+                  "endDate"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Clase creada exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Class created"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Classe"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "class"
+        ],
+        "summary": "Obtener todas las clases",
+        "description": "Obtiene la lista de todas las clases disponibles.",
+        "responses": {
+          "200": {
+            "description": "Lista de clases obtenida exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Classe"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/classes/{id}": {
+      "get": {
+        "tags": [
+          "class"
+        ],
+        "summary": "Obtener una clase por ID",
+        "description": "Obtiene los detalles de una clase específica.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "ID de la clase"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Clase obtenida exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Classe"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Clase no encontrada"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "class"
+        ],
+        "summary": "Actualizar una clase",
+        "description": "Actualiza la información de una clase específica.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "ID de la clase"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClasseUpdateInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Clase actualizada exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Class updated"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Classe"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "404": {
+            "description": "Clase no encontrada"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "class"
+        ],
+        "summary": "Eliminar una clase",
+        "description": "Elimina una clase del sistema.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "ID de la clase"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Clase eliminada exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Class deleted"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Clase no encontrada"
+          }
+        }
+      }
+    },
+    "/classes/signup/{id}": {
+      "put": {
+        "tags": [
+          "class"
+        ],
+        "summary": "Inscribir a un usuario en una clase",
+        "description": "Permite a un usuario inscribirse en una clase.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "ID de la clase"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Inscripción exitosa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful enrollment"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Clase no encontrada"
+          }
+        }
+      }
+    },
+    "/classes/unroll/{id}": {
+      "put": {
+        "tags": [
+          "class"
+        ],
+        "summary": "Cancelar inscripción de un usuario en una clase",
+        "description": "Permite a un usuario cancelar su inscripción en una clase.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "ID de la clase"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Desinscripción exitosa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successful unrollment"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Inscripción no encontrada"
           }
         }
       }
@@ -287,43 +820,126 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
-            "example": 10
+            "type": "string",
+            "example": "8f4b3fa1-6fbd-4de2-b8a8-084f4e756f0a"
           },
           "username": {
             "type": "string",
-            "example": "theUser"
+            "example": "user123"
           },
-          "firstName": {
+          "fullname": {
             "type": "string",
-            "example": "John"
-          },
-          "lastName": {
-            "type": "string",
-            "example": "James"
+            "example": "John Doe"
           },
           "email": {
             "type": "string",
-            "example": "john@email.com"
+            "example": "johndoe@example.com"
           },
-          "password": {
+          "birthdate": {
             "type": "string",
-            "example": "12345"
+            "format": "date",
+            "example": "1990-05-21"
           },
-          "phone": {
+          "nationality": {
             "type": "string",
-            "example": "12345"
+            "example": "Argentinian"
           },
-          "userStatus": {
-            "type": "integer",
-            "description": "User Status",
-            "format": "int32",
-            "example": 1
+          "Classe": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Mathematics"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "Active"
+                },
+                "enrollmentDate": {
+                  "type": "string",
+                  "format": "date",
+                  "example": "2024-01-01"
+                }
+              }
+            }
           }
-        },
-        "xml": {
-          "name": "user"
+        }
+      },
+      "UserInput": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "user123"
+          },
+          "fullname": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "johndoe@example.com"
+          },
+          "birthdate": {
+            "type": "string",
+            "format": "date",
+            "example": "1990-05-21"
+          },
+          "nationality": {
+            "type": "string",
+            "example": "Argentinian"
+          }
+        }
+      },
+      "UserUpdateInput": {
+        "type": "object",
+        "properties": {
+          "fullname": {
+            "type": "string",
+            "example": "Johnathan Doe"
+          },
+          "nationality": {
+            "type": "string",
+            "example": "Brazilian"
+          }
+        }
+      },
+      "Classe": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ClasseUpdateInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "ApiResponse": {

@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import ClassesService from "../services/classes";
-//import getInfoToken from "../utils/decodeToken";
 
 class ClassesController {
   static async getAll(req: Request, res: Response, next: NextFunction) {
