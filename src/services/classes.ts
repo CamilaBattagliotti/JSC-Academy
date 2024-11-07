@@ -9,7 +9,10 @@ class ClassesService {
     try {
       const filters = createFilters(data);
 
-      const classes = await Classe.findAndCountAll(filters);
+      const classes = await Classe.findAndCountAll({
+        ...filters,
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+      });
 
       return classes;
     } catch (error) {
