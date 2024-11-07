@@ -4,14 +4,11 @@ import BlacklistService from "../services/blacklist";
 
 async function checkJWT(req: any, res: Response, next: NextFunction) {
   const token = req.headers.authorization?.split(" ")[1];
-  console.log("entre al check", token);
 
   if (!token) {
-    console.log("entre al try no hay token", token);
     res.status(400).json({ message: "Token requerido" });
     return;
   }
-
   try {
     const isBlacklisted = await BlacklistService.isTokenBlacklisted(token);
     if (isBlacklisted) {

@@ -25,6 +25,5 @@ const Blacklist = sequelize.define("Blacklist", {
     },
   },
 });
-// Blacklist.sync({force:true})
 
 export default Blacklist;

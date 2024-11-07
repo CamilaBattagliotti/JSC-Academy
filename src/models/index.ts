@@ -6,14 +6,13 @@ import UserClasse from "./users-classes";
 
 User.hasOne(Auth, {
   foreignKey: "userId",
-  onDelete: "CASCADE", // Elimina el registro en Auth cuando se elimina el usuario
+  onDelete: "CASCADE",
 });
 
 Auth.belongsTo(User, {
   foreignKey: "userId",
 });
 
-// Relación muchos a muchos entre User y Classe
 User.belongsToMany(Classe, {
   through: UserClasse,
   onDelete: "CASCADE",

@@ -6,7 +6,6 @@ function createSaltAndHash(payload: string | Object, salt: string) {
     .update(salt + payload)
     .digest("hex");
 
-  // Esto sera la password en la DB
   return `${salt}:${hash}`;
 }
 

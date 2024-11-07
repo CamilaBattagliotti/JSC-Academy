@@ -12,12 +12,16 @@ const classSchema = z
       .max(50, {
         message: "El nombre de la clase debe tener menos de 50 caracteres",
       }),
-    startDate: z.string({
-      required_error: "La fecha de inicio es requerida",
-    }),
-    endDate: z.string({
-      required_error: "La fecha de finalización es requerida",
-    }),
+    startDate: z
+      .string({
+        required_error: "La fecha de inicio es requerida",
+      })
+      .date(),
+    endDate: z
+      .string({
+        required_error: "La fecha de finalización es requerida",
+      })
+      .date(),
   })
   .strict();
 

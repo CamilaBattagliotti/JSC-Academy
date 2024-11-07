@@ -23,7 +23,7 @@ async function authenticate() {
     console.error("Unable to connect to the database:", error);
   }
 }
-// FUNCION PARA CHEQUEAR SI LA TABLA EXISTE
+
 async function checkIfTableExists() {
   const queryInterface = sequelize.getQueryInterface();
   const tables = await queryInterface.showAllTables();
@@ -35,7 +35,6 @@ async function checkIfTableExists() {
   }
 }
 
-// Autenticación y verificación de la tabla
 (async () => {
   //sequelize.sync({ alter: true });
   await authenticate();

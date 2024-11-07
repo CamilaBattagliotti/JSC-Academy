@@ -19,7 +19,6 @@ class AuthService {
           `Los datos ingresados son inválidos: ${errorMessages}`
         );
         error["statusCode"] = 400;
-
         throw error;
       }
       const { username, fullname, email, password, birthdate, nationality } =
@@ -30,7 +29,6 @@ class AuthService {
       if (existingUser) {
         const error: any = new Error("El usuario ya está registrado");
         error["statusCode"] = 400;
-
         throw error;
       }
 
@@ -42,21 +40,17 @@ class AuthService {
         nationality,
       });
 
-      // 3. Generar un salt único para este usuario
       const salt = UUID();
 
-      // 4. Hashear la contraseña usando tu función `createSaltAndHash`
       const hashedPassword = createSaltAndHash(password, salt);
 
-      // 5. Generar el token que contiene la información del rol
       const token = createToken({
         id: newUser.id,
       });
 
-      // 6. Guardar el password hasheado y el id del usuario.
-      const authRecord = await Auth.create({
-        userId: newUser.id, // el id del usuario recién creado
-        password: hashedPassword, // la contraseña hasheada
+      await Auth.create({
+        userId: newUser.id,
+        password: hashedPassword,
       });
 
       return {
@@ -64,8 +58,8 @@ class AuthService {
         newUser,
         token,
       };
-    } catch (error: any) {
-      throw new Error(error.message || "Error al registrar el usuario");
+    } catch (error) {
+      throw new Error("Error al registrar el usuario");
     }
   }
 
@@ -90,7 +84,6 @@ class AuthService {
           `Los datos ingresados son inválidos: ${errorMessages}`
         );
         error["statusCode"] = 400;
-
         throw error;
       }
       const { email, password } = result.data;
@@ -100,7 +93,6 @@ class AuthService {
       if (!user) {
         const error: any = new Error("Usuario no encontrado");
         error["statusCode"] = 404;
-
         throw error;
       }
 
@@ -111,7 +103,6 @@ class AuthService {
           "No se encontraron credenciales asociadas al usuario"
         );
         error["statusCode"] = 404;
-
         throw error;
       }
 
@@ -126,7 +117,6 @@ class AuthService {
       } else {
         const error: any = new Error("Contraseña incorrecta");
         error["statusCode"] = 401;
-
         throw error;
       }
     } catch (error) {
@@ -137,10 +127,8 @@ class AuthService {
     if (!refreshToken) {
       const error: any = new Error("El refresh token es requerido");
       error["statusCode"] = 401;
-
       throw error;
     }
-
     try {
       const verified = jwt.verify(
         refreshToken,
@@ -157,7 +145,9 @@ class AuthService {
 
       return newAccessToken;
     } catch (error) {
-      throw new Error("Refresh token invalido");
+      const tokenError = new Error("Refresh token invalido");
+      tokenError["statusCode"] = 403;
+      throw tokenError;
     }
   }
 
