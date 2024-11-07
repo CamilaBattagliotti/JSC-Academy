@@ -8,18 +8,15 @@ class BlacklistService {
         userId,
       });
     } catch (error) {
-      throw new Error(
-        "Error al añadir el token a la lista negra: " + error.message
-      );
+      throw new Error("Error al añadir el token a la lista negra");
     }
   }
 
-  // Verificar si un token está en la blacklist
   static async isTokenBlacklisted(token: string) {
     try {
-      // Buscar si el token ya está en la lista negra
       const blacklistEntry = await Blacklist.findOne({ where: { token } });
-      return blacklistEntry !== null; // Devuelve true si el token está en la lista negra
+
+      return blacklistEntry !== null;
     } catch (error) {
       throw new Error(
         "Error al verificar el token en la lista negra: " + error.message

@@ -3,17 +3,24 @@ import User from "../models/users";
 import Classe from "../models/classes";
 import createFilters from "../utils/createFilters";
 import { validateClass, validateUpdatedClass } from "../schemas/classes";
+import Logger from "../lib/winston";
+
 class ClassesService {
   static async getAll(data) {
     try {
       const filters = createFilters(data);
 
-      const classes = await Classe.findAndCountAll(filters);
+      const classes = await Classe.findAndCountAll({
+        ...filters,
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+      });
+
       return classes;
     } catch (error) {
       throw error;
     }
   }
+
   static async create(data) {
     try {
       const result = validateClass(data);
@@ -26,9 +33,9 @@ class ClassesService {
           `Los datos ingresados son inválidos: ${errorMessages}`
         );
         error["statusCode"] = 400;
-
         throw error;
       }
+
       const { name, startDate, endDate } = result.data;
 
       const classe = await Classe.create({
@@ -36,17 +43,18 @@ class ClassesService {
         startDate,
         endDate,
       });
+      Logger.info(`Clase creada ${name}`);
 
       return classe;
     } catch (error) {
       throw error;
     }
   }
+
   static async getById(id) {
     try {
       const classe = await Classe.findByPk(id, {
         attributes: { exclude: ["createdAt", "updatedAt"] },
-
         include: {
           model: User,
           attributes: {
@@ -61,22 +69,32 @@ class ClassesService {
           },
         },
       });
+
+      if (!classe) {
+        const error: any = new Error("Clase no encontrada");
+        error["statusCode"] = 404;
+        throw error;
+      }
+
       return classe;
     } catch (error) {
       throw error;
     }
   }
+
   static async delete(id) {
     try {
       const classe = await Classe.findByPk(id);
+
       if (!classe) {
         const error: any = new Error("Clase no encontrada");
         error["statusCode"] = 404;
-
         throw error;
       }
 
       await classe.destroy();
+      Logger.info("Clase eliminada");
+
       return { message: "Clase eliminada correctamente" };
     } catch (error) {
       throw error;
@@ -95,11 +113,12 @@ class ClassesService {
           `Los datos ingresados son inválidos: ${errorMessages}`
         );
         error["statusCode"] = 400;
-
         throw error;
       }
-      const [classCount] = await Classe.update(result.data, {
+
+      const [classCount, classes] = await Classe.update(result.data, {
         where: { id: id },
+        returning: true,
       });
 
       if (classCount === 0) {
@@ -108,7 +127,7 @@ class ClassesService {
         throw error;
       }
 
-      return { "Numero de registros modificados: ": classCount };
+      return { "Clase modificada: ": classes };
     } catch (error) {
       throw error;
     }
@@ -123,6 +142,8 @@ class ClassesService {
         enrollmentDate: date,
         status: "Active",
       });
+      Logger.info("Inscripcion exitosa");
+
       return signUp;
     } catch (error) {
       throw error;
@@ -160,6 +181,7 @@ class ClassesService {
         error["statusCode"] = 404;
         throw error;
       }
+      Logger.info("Desvinculacion exitosa");
 
       return { message: "Inscripción cancelada correctamente", updatedCount };
     } catch (error) {

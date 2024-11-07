@@ -38,7 +38,7 @@ class ClassesController {
   static async update(req: Request, res: Response, next: NextFunction) {
     try {
       const classe = await ClassesService.update(req.params.id, req.body);
-      res.status(201).json({ message: "Class updated", data: classe });
+      res.status(200).json({ message: "Class updated", data: classe });
     } catch (error) {
       next(error);
     }
@@ -46,10 +46,10 @@ class ClassesController {
 
   static async enroll(req: any, res: Response, next: NextFunction) {
     try {
-      //const token = req.headers.authorization?.split(" ")[1];
-      //const decodedToken: any = getInfoToken(token);
       const classeId = req.params.id;
+
       await ClassesService.enroll(classeId, req._user.id);
+
       res.status(201).json({ message: "Successful enrollment" });
     } catch (error) {
       next(error);

@@ -7,7 +7,7 @@ class UserController {
       const users = await UserService.getAll(req.query);
       res.status(200).json({ data: users });
     } catch (error) {
-      next(error); //hacer erroshandler
+      next(error);
     }
   }
 
@@ -17,16 +17,16 @@ class UserController {
 
       res.status(201).json({ message: "User created", data: user });
     } catch (error) {
-      next(error); 
+      next(error);
     }
   }
 
   static async getById(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await UserService.getById(req.params.id); 
+      const user = await UserService.getById(req.params.id);
       res.status(200).json({ data: user });
     } catch (error) {
-      next(error); 
+      next(error);
     }
   }
 
@@ -42,7 +42,7 @@ class UserController {
   static async update(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await UserService.update(req.params.id, req.body);
-      res.status(201).json({ message: "User updated", data: user });
+      res.status(200).json({ message: "User updated", data: user });
     } catch (error) {
       next(error);
     }
@@ -50,7 +50,7 @@ class UserController {
 
   static async getByEmail(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await UserService.getByEmail(req.body.email); //???
+      const user = await UserService.getByEmail(req.body.email);
       res.status(200).json({ data: user });
     } catch (error) {
       next(error);

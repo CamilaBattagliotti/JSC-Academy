@@ -13,15 +13,6 @@ class AuthController {
     }
   }
 
-  static async getAll(req: Request, res: Response, next: NextFunction) {
-    try {
-      const users = await AuthService.getAll();
-      res.status(200).json({ data: users });
-    } catch (error) {
-      next(error); //hacer erroshandler
-    }
-  }
-
   static async login(req: Request, res: Response, next: NextFunction) {
     try {
       const auth = await Auth.login(req.body);
@@ -49,16 +40,11 @@ class AuthController {
     try {
       const refreshToken = req.headers.refresh as string;
 
-      // if (!refreshToken) {
-      //   return res.status(400).json({ error: "El refresh token es requerido" });
-      // }
-
-      // Llama a AuthService para obtener un nuevo access token
       const newAccessToken = await AuthService.refreshToken(refreshToken);
 
       res.status(200).json({ accessToken: newAccessToken });
     } catch (error) {
-      res.status(403).json({ error: error.message });
+      next(error);
     }
   }
 }
