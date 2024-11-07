@@ -16,6 +16,7 @@ class ClassesService {
       throw error;
     }
   }
+
   static async create(data) {
     try {
       const result = validateClass(data);

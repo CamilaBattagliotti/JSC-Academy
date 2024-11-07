@@ -59,9 +59,7 @@ class AuthService {
         token,
       };
     } catch (error) {
-      const registerError = new Error("Error al registrar el usuario");
-      registerError["statusCode"] = 401;
-      throw registerError;
+      throw new Error("Error al registrar el usuario");
     }
   }
 
@@ -161,11 +159,7 @@ class AuthService {
 
       return { message: "Logout exitoso, token añadido a la lista negra" };
     } catch (error) {
-      const logoutError = new Error(
-        "Error al realizar el logout: " + error.message
-      );
-      logoutError["statusCode"] = 400;
-      throw logoutError;
+      throw new Error("Error al realizar el logout: " + error.message);
     }
   }
 }

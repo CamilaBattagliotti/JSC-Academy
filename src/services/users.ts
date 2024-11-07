@@ -84,6 +84,13 @@ class UserService {
   static async delete(userId: string) {
     try {
       const user = await User.destroy({ where: { id: userId } });
+
+      if (!user) {
+        const error: any = new Error("Usuario no encontrado");
+        error["statusCode"] = 404;
+        throw error;
+      }
+
       Logger.info("Usuario eliminado");
 
       return user;
