@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import ClassesService from "../services/classes";
-//import getInfoToken from "../utils/decodeToken";
 
 class ClassesController {
   static async getAll(req: Request, res: Response, next: NextFunction) {
@@ -47,10 +46,10 @@ class ClassesController {
 
   static async enroll(req: any, res: Response, next: NextFunction) {
     try {
-      //const token = req.headers.authorization?.split(" ")[1];
-      //const decodedToken: any = getInfoToken(token);
       const classeId = req.params.id;
+
       await ClassesService.enroll(classeId, req._user.id);
+
       res.status(201).json({ message: "Successful enrollment" });
     } catch (error) {
       next(error);

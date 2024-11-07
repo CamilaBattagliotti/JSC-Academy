@@ -27,9 +27,11 @@ const userSchema = z
         required_error: "El email es requerido",
       })
       .email("El email ingresado tiene un formato inválido"),
-    birthdate: z.string({
-      required_error: "La fecha de nacimiento es requerida",
-    }),
+    birthdate: z
+      .string({
+        required_error: "La fecha de nacimiento es requerida",
+      })
+      .date(),
     nationality: z
       .string({
         required_error: "La nacionalidad es requerida",

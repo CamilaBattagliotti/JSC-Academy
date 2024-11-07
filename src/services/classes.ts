@@ -3,12 +3,14 @@ import User from "../models/users";
 import Classe from "../models/classes";
 import createFilters from "../utils/createFilters";
 import { validateClass, validateUpdatedClass } from "../schemas/classes";
+
 class ClassesService {
   static async getAll(data) {
     try {
       const filters = createFilters(data);
 
       const classes = await Classe.findAndCountAll(filters);
+
       return classes;
     } catch (error) {
       throw error;
@@ -26,9 +28,9 @@ class ClassesService {
           `Los datos ingresados son inválidos: ${errorMessages}`
         );
         error["statusCode"] = 400;
-
         throw error;
       }
+
       const { name, startDate, endDate } = result.data;
 
       const classe = await Classe.create({
@@ -42,11 +44,11 @@ class ClassesService {
       throw error;
     }
   }
+
   static async getById(id) {
     try {
       const classe = await Classe.findByPk(id, {
         attributes: { exclude: ["createdAt", "updatedAt"] },
-
         include: {
           model: User,
           attributes: {
@@ -61,22 +63,31 @@ class ClassesService {
           },
         },
       });
+
+      if (!classe) {
+        const error: any = new Error("Clase no encontrada");
+        error["statusCode"] = 404;
+        throw error;
+      }
+
       return classe;
     } catch (error) {
       throw error;
     }
   }
+
   static async delete(id) {
     try {
       const classe = await Classe.findByPk(id);
+
       if (!classe) {
         const error: any = new Error("Clase no encontrada");
         error["statusCode"] = 404;
-
         throw error;
       }
 
       await classe.destroy();
+
       return { message: "Clase eliminada correctamente" };
     } catch (error) {
       throw error;
@@ -95,9 +106,9 @@ class ClassesService {
           `Los datos ingresados son inválidos: ${errorMessages}`
         );
         error["statusCode"] = 400;
-
         throw error;
       }
+
       const [classCount] = await Classe.update(result.data, {
         where: { id: id },
       });
@@ -123,6 +134,7 @@ class ClassesService {
         enrollmentDate: date,
         status: "Active",
       });
+
       return signUp;
     } catch (error) {
       throw error;

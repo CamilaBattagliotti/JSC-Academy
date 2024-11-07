@@ -1,12 +1,10 @@
-
 # Proyecto Final Backend - Gestión de Usuarios y Clases -
 
-¡Bienvenides a nuestro último desafío en el curso de Desarrollo Backend con Node.js! 
+¡Bienvenides a nuestro último desafío en el curso de Desarrollo Backend con Node.js!
 
-Este proyecto es el resultado de dos semanas de horas de código, trabajo en equipo y mucho mate, fideos y risas. 
+Este proyecto es el resultado de dos semanas de horas de código, trabajo en equipo y mucho mate, fideos y risas.
 
-
-##  📚 Descripción del Proyecto
+## 📚 Descripción del Proyecto
 
 Creamos un sistema de autenticación y administración de usuarios que permite:
 
@@ -33,10 +31,8 @@ Nos aseguramos de seguir la estructura REST y el patrón MVCS para un código li
 - Inscripción a Clases: Los usuarios pueden inscribirse y desvincularse de clases a través de relaciones entre entidades.
 - Seguridad y Autenticación Avanzadas: Sistema de Refresh Tokens para sesiones prolongadas y HelmetJS para mejorar la seguridad.
 
-
-
-
 ## 📖 Documentación y Deploy
+
 La API está documentada en Swagger. Consulta los detalles y ejemplos de cada endpoint en nuestro [Swagger Online](https://eloquent-freedom-production.up.railway.app/api-docs/)
 
 La API y la base de datos están desplegadas en [Railway](https://eloquent-freedom-production.up.railway.app)
@@ -46,8 +42,13 @@ La API y la base de datos están desplegadas en [Railway](https://eloquent-freed
 Nos presentamos, ¡el equipazo que hizo esto posible!
 
 ### ♓ Cami
-[Github](https://github.com/CamilaBattagliotti) -  [Linkedin](https://www.linkedin.com/in/camila-battagliotti/)
-### ♒ Jime 
-[Github](https://github.com/JimeJai) -  [Linkedin](https://www.linkedin.com/in/jimena-miramontes-265800310/)
+
+[Github](https://github.com/CamilaBattagliotti) - [Linkedin](https://www.linkedin.com/in/camila-battagliotti/)
+
+### ♒ Jime
+
+[Github](https://github.com/JimeJai) - [Linkedin](https://www.linkedin.com/in/jimena-miramontes-265800310/)
+
 ### ♎ Sofi
-[Github](https://github.com/Sofiferrer) -  [Linkedin](https://www.linkedin.com/in/ferrer-sofia/)
+
+[Github](https://github.com/Sofiferrer) - [Linkedin](https://www.linkedin.com/in/ferrer-sofia/)
