@@ -38,7 +38,7 @@ class ClassesController {
   static async update(req: Request, res: Response, next: NextFunction) {
     try {
       const classe = await ClassesService.update(req.params.id, req.body);
-      res.status(201).json({ message: "Class updated", data: classe });
+      res.status(200).json({ message: "Class updated", data: classe });
     } catch (error) {
       next(error);
     }

@@ -42,7 +42,7 @@ class UserController {
   static async update(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await UserService.update(req.params.id, req.body);
-      res.status(201).json({ message: "User updated", data: user });
+      res.status(200).json({ message: "User updated", data: user });
     } catch (error) {
       next(error);
     }
@@ -50,7 +50,7 @@ class UserController {
 
   static async getByEmail(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await UserService.getByEmail(req.body.email); //???
+      const user = await UserService.getByEmail(req.body.email);
       res.status(200).json({ data: user });
     } catch (error) {
       next(error);

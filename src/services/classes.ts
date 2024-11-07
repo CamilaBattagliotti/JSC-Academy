@@ -113,8 +113,9 @@ class ClassesService {
         throw error;
       }
 
-      const [classCount] = await Classe.update(result.data, {
+      const [classCount, classes] = await Classe.update(result.data, {
         where: { id: id },
+        returning: true,
       });
 
       if (classCount === 0) {
@@ -123,7 +124,7 @@ class ClassesService {
         throw error;
       }
 
-      return { "Numero de registros modificados: ": classCount };
+      return { "Clase modificada: ": classes };
     } catch (error) {
       throw error;
     }
