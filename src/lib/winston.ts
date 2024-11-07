@@ -26,10 +26,6 @@ const winTransports = [
     level: "error",
     handleExceptions: true,
   }),
-  new transports.File({
-    filename: "logs/warnings.log",
-    level: "warn",
-  }),
 ];
 
 const Logger = createLogger({

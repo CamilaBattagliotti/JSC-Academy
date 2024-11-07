@@ -3,6 +3,7 @@ import User from "../models/users";
 import Classe from "../models/classes";
 import createFilters from "../utils/createFilters";
 import { validateClass, validateUpdatedClass } from "../schemas/classes";
+import Logger from "../lib/winston";
 
 class ClassesService {
   static async getAll(data) {
@@ -42,6 +43,7 @@ class ClassesService {
         startDate,
         endDate,
       });
+      Logger.info(`Clase creada ${name}`);
 
       return classe;
     } catch (error) {
@@ -91,6 +93,7 @@ class ClassesService {
       }
 
       await classe.destroy();
+      Logger.info("Clase eliminada");
 
       return { message: "Clase eliminada correctamente" };
     } catch (error) {
@@ -139,6 +142,7 @@ class ClassesService {
         enrollmentDate: date,
         status: "Active",
       });
+      Logger.info("Inscripcion exitosa");
 
       return signUp;
     } catch (error) {
@@ -177,6 +181,7 @@ class ClassesService {
         error["statusCode"] = 404;
         throw error;
       }
+      Logger.info("Desvinculacion exitosa");
 
       return { message: "Inscripción cancelada correctamente", updatedCount };
     } catch (error) {

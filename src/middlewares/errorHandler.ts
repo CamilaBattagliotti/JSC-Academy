@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import Logger from "../lib/winston";
 
 function errorHandler(
   error: any,
@@ -7,6 +8,8 @@ function errorHandler(
   next: NextFunction
 ) {
   const { statusCode, message } = error;
+  Logger.error(message);
+
   res.status(statusCode || 500).json({ message: message });
 }
 

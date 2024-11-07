@@ -51,7 +51,6 @@ class UserService {
         birthdate,
         nationality,
       });
-
       return user;
     } catch (error) {
       throw error;

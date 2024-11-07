@@ -13,15 +13,6 @@ class AuthController {
     }
   }
 
-  static async getAll(req: Request, res: Response, next: NextFunction) {
-    try {
-      const users = await AuthService.getAll();
-      res.status(200).json({ data: users });
-    } catch (error) {
-      next(error);
-    }
-  }
-
   static async login(req: Request, res: Response, next: NextFunction) {
     try {
       const auth = await Auth.login(req.body);
