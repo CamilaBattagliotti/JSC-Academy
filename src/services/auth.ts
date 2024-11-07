@@ -5,6 +5,7 @@ import UsersService from "./users";
 import { validateSignup, validateLogin } from "../schemas/auth";
 import * as jwt from "jsonwebtoken";
 import BlacklistService from "./blacklist";
+import Logger from "../lib/winston";
 
 class AuthService {
   static async register(data: any) {
@@ -52,6 +53,7 @@ class AuthService {
         userId: newUser.id,
         password: hashedPassword,
       });
+      Logger.info("Usuario creado");
 
       return {
         message: "Usuario registrado exitosamente",
@@ -60,15 +62,6 @@ class AuthService {
       };
     } catch (error) {
       throw new Error("Error al registrar el usuario");
-    }
-  }
-
-  static async getAll() {
-    try {
-      const users = await Auth.findAll();
-      return users;
-    } catch (error) {
-      throw error;
     }
   }
 
@@ -112,6 +105,8 @@ class AuthService {
 
       if (hashedPassword === userAuth.password) {
         const token = createToken({ id: user.id });
+
+        Logger.info("Usuario logueado");
 
         return { message: "Login exitoso", token };
       } else {
